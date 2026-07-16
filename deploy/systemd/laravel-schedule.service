@@ -1,0 +1,11 @@
+# /etc/systemd/system/laravel-schedule.service + laravel-schedule.timer
+# Menjalankan `php artisan schedule:run` tiap menit (pengganti cron).
+[Unit]
+Description=Laravel Scheduler (rizky-project-api)
+
+[Service]
+Type=oneshot
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/rizky-project-api/current
+ExecStart=/usr/bin/php artisan schedule:run

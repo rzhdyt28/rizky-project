@@ -1,0 +1,27 @@
+{
+  "name": "auto-apply-agent",
+  "version": "1.0.0",
+  "description": "AI Agent semi-otomatis untuk pencarian & pelamaran kerja (LinkedIn, Jobstreet, Indeed, Glints) dengan filter deteksi lowongan palsu.",
+  "type": "module",
+  "main": "src/scheduler.js",
+  "scripts": {
+    "init-db": "node src/db/index.js --init",
+    "save-session": "node scripts/saveSession.js",
+    "import-cookies": "node scripts/importCookies.js",
+    "test-pipeline": "node scripts/testPipeline.js",
+    "start": "node src/scheduler.js",
+    "dashboard": "node src/dashboard/index.js",
+    "check": "node scripts/checkEnv.js",
+    "backup": "bash deploy/backup-db.sh"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "mammoth": "^1.8.0",
+    "node-cron": "^3.0.3",
+    "pdf-parse": "^1.1.1",
+    "playwright": "^1.47.0"
+  }
+}

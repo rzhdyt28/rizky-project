@@ -1,0 +1,36 @@
+{
+  "name": "Nama Lengkap Anda",
+  "email": "email@anda.com",
+  "phone": "+62812xxxxxxx",
+  "summary": "Ringkasan singkat profil profesional Anda, 2-3 kalimat.",
+  "skills": ["JavaScript", "React", "Node.js", "SQL"],
+  "years_of_experience": 2,
+  "experience": [
+    {
+      "title": "Frontend Developer",
+      "company": "Nama Perusahaan Sebelumnya",
+      "duration": "2023 - Sekarang",
+      "highlights": [
+        "Membangun dan memelihara aplikasi web menggunakan React",
+        "Berkolaborasi dengan tim backend untuk integrasi API"
+      ]
+    }
+  ],
+  "education": [
+    { "degree": "S1 Teknik Informatika", "institution": "Universitas Anda", "year": "2023" }
+  ],
+  "preferences": {
+    "location": "Jakarta",
+    "remote_ok": true,
+    "salary_min_idr": 8000000,
+    "excluded_industries": ["MLM", "Investasi Bodong"]
+  },
+  "search": {
+    "_keterangan": "Sejak versi ini, 'keywords' bisa berisi BANYAK kata kunci (array) — akan dicari satu per satu lalu digabung & di-dedup. Field lama 'keyword' (tunggal) masih didukung untuk kompatibilitas.",
+    "default_keywords": ["Frontend Developer", "Web Developer"],
+    "linkedin": { "keywords": ["Frontend Developer", "Web Developer"], "location": "Jakarta, Indonesia" },
+    "jobstreet": { "keywords": ["frontend-developer", "web-developer"], "location": "jakarta" },
+    "indeed": { "keywords": ["Frontend Developer", "Web Developer"], "location": "Jakarta" },
+    "glints": { "keywords": ["Frontend Developer", "Web Developer"], "location": "Jakarta" }
+  }
+}

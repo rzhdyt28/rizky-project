@@ -1,0 +1,20 @@
+# /etc/systemd/system/laravel-queue.service
+# Alternatif Supervisor untuk worker queue Laravel (systemd lebih ringan).
+# Enable: sudo systemctl enable --now laravel-queue.service
+[Unit]
+Description=Laravel Queue Worker (rizky-project-api)
+After=network.target mysql.service redis.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+Restart=always
+RestartSec=3
+WorkingDirectory=/var/www/rizky-project-api/current
+ExecStart=/usr/bin/php artisan queue:work --sleep=3 --tries=3 --max-time=3600 --queue=default
+StandardOutput=append:/var/log/laravel-queue.log
+StandardError=append:/var/log/laravel-queue.log
+
+[Install]
+WantedBy=multi-user.target

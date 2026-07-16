@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= application.job_title %> — Detail</title>
+  <style>
+    body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; background: #f5f7fa; color: #222; }
+    header { background: #2e5b8a; color: white; padding: 20px 30px; }
+    a.back { color: #cfe0f2; text-decoration: none; font-size: 13px; }
+    .container { max-width: 800px; margin: 24px auto; background: white; border-radius: 10px; padding: 24px 30px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    h2 { margin-top: 0; }
+    .meta { color: #666; font-size: 14px; margin-bottom: 16px; }
+    .section { margin-bottom: 20px; }
+    .section h3 { font-size: 14px; text-transform: uppercase; color: #2e5b8a; margin-bottom: 6px; }
+    .cover-letter { white-space: pre-wrap; background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid #eee; }
+    .reasons { background: #fef3c7; padding: 12px 16px; border-radius: 8px; }
+    img.screenshot { max-width: 100%; border: 1px solid #ddd; border-radius: 8px; margin-top: 8px; }
+    form.status-form { margin-top: 16px; }
+    select, button { padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; }
+    button { background: #2e5b8a; color: white; border: none; cursor: pointer; }
+    .quick-apply-box { background: #eaf0f7; border: 1px solid #cfe0f2; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+    .quick-apply-box p { margin: 0 0 10px; font-size: 13px; color: #444; }
+    button.quick-apply-btn { background: #1e8e5a; font-weight: 600; padding: 10px 18px; font-size: 14px; }
+    button.quick-apply-btn:hover { background: #17734a; }
+    .quick-apply-status { margin-top: 8px; font-size: 13px; color: #1e8e5a; font-weight: 600; display: none; }
+  </style>
+</head>
+<body>
+  <header><a class="back" href="/">&larr; Kembali ke daftar</a></header>
+  <div class="container">
+    <h2><%= application.job_title %></h2>
+    <div class="meta">
+      <%= application.company %> · <%= application.location || "-" %> · Platform: <%= application.platform %>
+    </div>
+
+    <% if (application.status === "draft" && application.cover_letter) { %>
+    <div class="quick-apply-box">
+      <p>
+        <strong>Quick Apply Assist:</strong> tombol ini akan meng-copy cover letter ke
+        clipboard Anda dan langsung membuka halaman lamaran ini di tab baru. Setelah tab
+        terbuka, tinggal <strong>paste (Ctrl+V)</strong> cover letter ke kolom yang sesuai
+        lalu <strong>submit manual</strong> di situs aslinya — proses submit tetap sepenuhnya
+        Anda yang lakukan, ini cuma menghilangkan langkah cari-link & copy manual.
+      </p>
+      <button type="button" class="quick-apply-btn" onclick="quickApply()">🚀 Siapkan &amp; Buka Lowongan</button>
+      <div class="quick-apply-status" id="quickApplyStatus">✓ Cover letter tersalin ke clipboard — tab lowongan sudah dibuka!</div>
+    </div>
+    <script>
+      async function quickApply() {
+        const coverLetter = <%- JSON.stringify(application.cover_letter || "") %>;
+        const applyUrl = <%- JSON.stringify(application.apply_url) %>;
+        try {
+          await navigator.clipboard.writeText(coverLetter);
+        } catch (err) {
+          alert("Gagal copy otomatis ke clipboard (izin browser?). Silakan copy manual dari bagian 'Cover Letter' di bawah.");
+        }
+        window.open(applyUrl, "_blank", "noopener");
+        const statusEl = document.getElementById("quickApplyStatus");
+        statusEl.style.display = "block";
+        // Ingatkan untuk update status setelah submit manual selesai.
+        setTimeout(() => {
+          statusEl.textContent = "✓ Selesai submit di situs asli? Jangan lupa update status di bawah jadi \"applied\".";
+        }, 4000);
+      }
+    </script>
+    <% } %>
+
+    <div class="section">
+      <h3>Link Lamaran</h3>
+      <a href="<%= application.apply_url %>" target="_blank" rel="noopener"><%= application.apply_url %></a>
+    </div>
+
+    <div class="section">
+      <h3>Skor Kecocokan</h3>
+      <p><%= application.match_score ?? "-" %> / 100 — <%= application.match_reason || "" %></p>
+    </div>
+
+    <div class="section">
+      <h3>Status Deteksi Scam: <%= application.scam_status %></h3>
+      <% if (application.scam_reasons) { %>
+        <div class="reasons"><%= JSON.parse(application.scam_reasons).join(" · ") %></div>
+      <% } %>
+    </div>
+
+    <% if (application.cover_letter) { %>
+    <div class="section">
+      <h3>Cover Letter (draft AI)</h3>
+      <div class="cover-letter"><%= application.cover_letter %></div>
+    </div>
+    <% } %>
+
+    <% if (application.screenshot_path) { %>
+    <div class="section">
+      <h3>Screenshot Draft Form</h3>
+      <img class="screenshot" src="/drafts/<%= application.screenshot_path.split('/').pop() %>" alt="screenshot" />
+    </div>
+    <% } %>
+
+    <form class="status-form" method="post" action="/application/<%= application.id %>/status">
+      <label>Ubah status: </label>
+      <select name="status">
+        <% ["draft","applied","viewed","interview","rejected","skipped"].forEach(s => { %>
+          <option value="<%= s %>" <%= application.status === s ? "selected" : "" %>><%= s %></option>
+        <% }) %>
+      </select>
+      <button type="submit">Simpan</button>
+    </form>
+  </div>
+</body>
+</html>

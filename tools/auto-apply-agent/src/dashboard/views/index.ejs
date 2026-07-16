@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Auto Apply Dashboard</title>
+  <style>
+    body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; background: #f5f7fa; color: #222; }
+    header { background: #2e5b8a; color: white; padding: 20px 30px; }
+    header h1 { margin: 0; font-size: 20px; }
+    .stats { display: flex; gap: 16px; padding: 20px 30px 0; flex-wrap: wrap; }
+    .stat-card { background: white; border-radius: 8px; padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); min-width: 120px; }
+    .stat-card .n { font-size: 22px; font-weight: 700; color: #2e5b8a; }
+    .stat-card .label { font-size: 12px; color: #666; }
+    .filters { padding: 16px 30px; display: flex; gap: 10px; }
+    .filters select { padding: 6px 10px; border-radius: 6px; border: 1px solid #ccc; }
+    table { width: calc(100% - 60px); margin: 10px 30px 30px; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
+    th { background: #eaf0f7; color: #2e5b8a; }
+    tr:hover { background: #fafbfc; }
+    .badge { padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+    .badge-PASS { background: #dcfce7; color: #166534; }
+    .badge-REVIEW { background: #fef3c7; color: #92400e; }
+    .badge-BLOCK { background: #fee2e2; color: #991b1b; }
+    .badge-draft { background: #e0e7ff; color: #3730a3; }
+    .badge-applied { background: #dcfce7; color: #166534; }
+    .badge-skipped { background: #f3f4f6; color: #6b7280; }
+    .badge-failed { background: #fee2e2; color: #991b1b; }
+    a.detail-link { color: #2e5b8a; text-decoration: none; font-weight: 600; margin-left: 10px; }
+    button.quick-apply-mini { background: #1e8e5a; color: white; border: none; border-radius: 6px; padding: 5px 10px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    button.quick-apply-mini:hover { background: #17734a; }
+    .actions-cell { white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <header><h1>🔎 Auto Apply Dashboard — Lowongan &amp; Status Lamaran</h1></header>
+
+  <div class="stats">
+    <div class="stat-card"><div class="n"><%= stats.total %></div><div class="label">Total lowongan diproses</div></div>
+    <% stats.byScam.forEach(s => { %>
+      <div class="stat-card"><div class="n"><%= s.n %></div><div class="label">Scam: <%= s.scam_status %></div></div>
+    <% }) %>
+    <% stats.byPlatform.forEach(s => { %>
+      <div class="stat-card"><div class="n"><%= s.n %></div><div class="label"><%= s.platform %></div></div>
+    <% }) %>
+  </div>
+
+  <form class="filters" method="get">
+    <select name="platform" onchange="this.form.submit()">
+      <option value="">Semua Platform</option>
+      <% ["linkedin","jobstreet","indeed","glints"].forEach(p => { %>
+        <option value="<%= p %>" <%= filters.platform === p ? "selected" : "" %>><%= p %></option>
+      <% }) %>
+    </select>
+    <select name="scam" onchange="this.form.submit()">
+      <option value="">Semua Status Scam</option>
+      <% ["PASS","REVIEW","BLOCK"].forEach(s => { %>
+        <option value="<%= s %>" <%= filters.scam === s ? "selected" : "" %>><%= s %></option>
+      <% }) %>
+    </select>
+    <select name="status" onchange="this.form.submit()">
+      <option value="">Semua Status Lamaran</option>
+      <% ["draft","applied","viewed","interview","rejected","skipped","failed"].forEach(s => { %>
+        <option value="<%= s %>" <%= filters.status === s ? "selected" : "" %>><%= s %></option>
+      <% }) %>
+    </select>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Platform</th><th>Posisi</th><th>Perusahaan</th><th>Skor</th><th>Scam</th><th>Status</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% applications.forEach(app => { %>
+        <tr>
+          <td><%= app.platform %></td>
+          <td><%= app.job_title || "-" %></td>
+          <td><%= app.company || "-" %></td>
+          <td><%= app.match_score ?? "-" %></td>
+          <td><span class="badge badge-<%= app.scam_status %>"><%= app.scam_status %></span></td>
+          <td><span class="badge badge-<%= app.status %>"><%= app.status %></span></td>
+          <td class="actions-cell">
+            <% if (app.status === "draft" && app.cover_letter) { %>
+              <button type="button" class="quick-apply-mini"
+                onclick='quickApplyFromList(<%- JSON.stringify(app.cover_letter) %>, <%- JSON.stringify(app.apply_url) %>, <%= app.id %>)'>
+                🚀 Apply
+              </button>
+            <% } %>
+            <a class="detail-link" href="/application/<%= app.id %>">Detail →</a>
+          </td>
+        </tr>
+      <% }) %>
+      <% if (applications.length === 0) { %>
+        <tr><td colspan="7">Belum ada data. Jalankan <code>npm start -- --once</code> untuk mulai memproses lowongan.</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <script>
+    async function quickApplyFromList(coverLetter, applyUrl, id) {
+      try {
+        await navigator.clipboard.writeText(coverLetter);
+      } catch (err) {
+        alert("Gagal copy otomatis ke clipboard (izin browser?). Buka Detail untuk copy manual.");
+      }
+      window.open(applyUrl, "_blank", "noopener");
+      alert("✓ Cover letter tersalin & tab lowongan dibuka. Setelah submit manual di situs asli, buka Detail lowongan ini untuk update status jadi \"applied\".");
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('plans', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->decimal('price', 12, 2)->default(0);
+            $table->integer('max_invitations')->default(1);
+            $table->integer('max_guests')->default(50);
+            $table->integer('max_photos')->default(4);
+            $table->boolean('custom_domain')->default(false);
+            $table->boolean('remove_branding')->default(false);
+            $table->boolean('music_enabled')->default(false);
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('plans');
+    }
+};

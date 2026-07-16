@@ -1,0 +1,167 @@
+{
+  "name": "Rizky Hidayat",
+  "email": "rzhdyt28@gmail.com",
+  "phone": "+62 899-3766-315",
+  "summary": "Profesional IT dengan pengalaman sekitar 4 tahun di bidang IT support, desktop support, dan implementasi perangkat jaringan di lingkungan enterprise perbankan. Berpengalaman menangani troubleshooting hardware/software, dukungan end-user, deployment perangkat, koordinasi lapangan lintas cabang, serta dokumentasi implementasi. Saat ini aktif mengembangkan diri ke arah System Administrator di bidang jaringan dan sistem, dengan nilai tambah dari latar belakang pengembangan web dan pengelolaan database.",
+  "skills": [
+    "IT Support",
+    "Desktop Support",
+    "IT Helpdesk",
+    "Troubleshooting Hardware & Software",
+    "Remote Support (AnyDesk, UltraViewer, MobaXterm/SSH)",
+    "Deployment Perangkat Jaringan (Access Point, Switch, Router)",
+    "Cisco (CCNA)",
+    "Huawei Networking",
+    "IP Addressing (Static & DHCP)",
+    "DNS",
+    "VLAN",
+    "Basic Networking",
+    "LAN Testing",
+    "Crimping Kabel",
+    "Windows 10/11 Administration",
+    "Ubuntu LTS & Linux CLI Dasar",
+    "Windows CMD/CLI (ipconfig, ping, netstat, sfc)",
+    "VirtualBox Virtualization",
+    "User Account & Permission Management",
+    "Backup, Restore & Patching",
+    "Microsoft 365 (Word, Excel, PowerPoint, Visio, Outlook, Teams)",
+    "Google Workspace",
+    "Git",
+    "Postman",
+    "HeidiSQL",
+    "Visual Studio Code",
+    "PHP (Laravel)",
+    "JavaScript (Vue.js)",
+    "MySQL",
+    "Konsep ITIL & SLA"
+  ],
+  "years_of_experience": 4,
+  "experience": [
+    {
+      "title": "IT Desktop Support Engineer",
+      "company": "PT Berca Hardayaperkasa",
+      "duration": "Jan 2026 - Jun 2026",
+      "highlights": [
+        "Terlibat dalam 2 proyek implementasi infrastruktur IT perbankan skala enterprise (Bank Mandiri, 30+ cabang Jabodetabek & luar kota)",
+        "Deployment access point untuk program Smart Branch: verifikasi fungsi perangkat, labeling, checklist, asset tracking",
+        "Assessment dan implementasi/upgrade switch & router Huawei untuk stabilitas jaringan cabang",
+        "Koordinasi dengan tim teknis dan perwakilan cabang, termasuk penugasan perjalanan dinas lintas kota"
+      ]
+    },
+    {
+      "title": "IT Staff",
+      "company": "CV Teguh Karya Mandiri",
+      "duration": "Agu 2024 - Agu 2025",
+      "highlights": [
+        "Dukungan teknis hardware, software, dan jaringan dasar untuk sekitar 25 staf dan tim proyek",
+        "Instalasi sistem operasi Windows, software, driver, dan antivirus sesuai kebutuhan pengguna",
+        "Digitalisasi administrasi dan pengelolaan arsip dokumen proyek",
+        "Konfigurasi IP addressing, pengaturan printer, troubleshooting konektivitas jaringan kantor"
+      ]
+    },
+    {
+      "title": "Freelance IT Support",
+      "company": "PT Jakarta International Expo",
+      "duration": "Mei 2024 - Jul 2024",
+      "highlights": [
+        "Mendukung operasional sistem & perangkat IT selama event Pekan Raya Jakarta (PRJ)",
+        "Konfigurasi dan troubleshooting terminal POS, printer tiket, scanner gate, jaringan",
+        "Solusi teknis real-time untuk gangguan pembacaan tiket di gate demi kelancaran operasional"
+      ]
+    },
+    {
+      "title": "Freelance IT Helpdesk/Support",
+      "company": "PT Kreasindo",
+      "duration": "Jan 2024 - Apr 2024",
+      "highlights": [
+        "Monitoring performa internal system dan analisis log aplikasi",
+        "Melaporkan rata-rata 15 issue/bulan ke tim developer sebagai bahan perbaikan",
+        "Menyusun laporan kinerja aplikasi secara berkala untuk evaluasi manajemen"
+      ]
+    },
+    {
+      "title": "Junior Frontend Developer",
+      "company": "PT Chronos Universal",
+      "duration": "Agu 2022 - Jul 2023",
+      "highlights": [
+        "Mengembangkan antarmuka web & mobile responsif menggunakan Vue.js"
+      ]
+    },
+    {
+      "title": "Junior Backend Developer",
+      "company": "The Big Rich Group",
+      "duration": "Okt 2020 - Jul 2022",
+      "highlights": [
+        "Merancang & mengembangkan fitur aplikasi dari sisi frontend maupun backend",
+        "Membangun REST API untuk integrasi sistem internal dan pihak ketiga"
+      ]
+    }
+  ],
+  "education": [
+    { "degree": "S1 Teknik Informatika", "institution": "Universitas Krisnadwipayana", "year": "2016-2020 (IPK 3.20)" },
+    { "degree": "SMK Teknik Instalasi Tenaga Listrik", "institution": "SMK Dinamika Pembangunan 1", "year": "2011-2014" }
+  ],
+  "certifications": [
+    "Cisco CCNA v7 (Cisco NetAcad, kerjasama Universitas Krisnadwipayana)",
+    "Fullstack Web Development: Laravel & Vue.js - BuildWithAngga (BWA)"
+  ],
+  "preferences": {
+    "location": "Jabodetabek",
+    "remote_ok": false,
+    "salary_min_idr": 6000000,
+    "excluded_industries": ["MLM", "Investasi Bodong"]
+  },
+  "search": {
+    "default_keywords": [
+      "System Administrator",
+      "Junior System Administrator",
+      "IT Support",
+      "IT Helpdesk",
+      "IT Support L1",
+      "Desktop Support",
+      "Network Administrator",
+      "IT Staff"
+    ],
+    "linkedin": {
+      "keywords": [
+        "System Administrator",
+        "Junior System Administrator",
+        "IT Support",
+        "IT Helpdesk",
+        "Desktop Support Engineer",
+        "Network Administrator"
+      ],
+      "location": "Jabodetabek, Indonesia"
+    },
+    "jobstreet": {
+      "keywords": [
+        "system-administrator",
+        "it-support",
+        "it-helpdesk",
+        "desktop-support",
+        "network-administrator"
+      ],
+      "location": "jakarta"
+    },
+    "indeed": {
+      "keywords": [
+        "System Administrator",
+        "IT Support",
+        "IT Helpdesk",
+        "Desktop Support",
+        "Network Administrator"
+      ],
+      "location": "Jakarta"
+    },
+    "glints": {
+      "keywords": [
+        "System Administrator",
+        "IT Support",
+        "IT Helpdesk",
+        "Desktop Support",
+        "Network Administrator"
+      ],
+      "location": "Jakarta"
+    }
+  }
+}

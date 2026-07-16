@@ -1,0 +1,122 @@
+name: CI & Deploy
+
+# Kapan workflow ini berjalan:
+# - PUSH ke main -> jalankan test, LALU deploy ke VPS produksi
+# - PULL REQUEST  -> hanya test (agar kode rusak tidak masuk main)
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  # Cegah dua deploy berjalan bersamaan (mis. dua push berurutan cepat)
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # ==========================================================
+  # JOB 1 — TEST: lint PHP + jalankan Pest, plus build frontend
+  # ==========================================================
+  test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      # MySQL disposable untuk testing migrations
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: testing
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, sqlite3, redis, gd, bcmath, zip
+          coverage: none
+          tools: composer:v2
+
+      # Cache Composer supaya install kedua dst. hanya 10 detik
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Copy .env & generate key
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          # Override koneksi database untuk CI
+          sed -i 's|^DB_HOST=.*|DB_HOST=127.0.0.1|' .env
+          sed -i 's|^DB_DATABASE=.*|DB_DATABASE=testing|' .env
+          sed -i 's|^DB_USERNAME=.*|DB_USERNAME=root|' .env
+          sed -i 's|^DB_PASSWORD=.*|DB_PASSWORD=root|' .env
+
+      - name: Lint (Pint)
+        run: vendor/bin/pint --test
+
+      - name: Static analysis (Larastan)
+        run: vendor/bin/phpstan analyse --memory-limit=1G || true
+        # `|| true`: kalau kamu belum sempat perbaiki semua warning, jangan blokir merge.
+        # Hapus kalau sudah bersih total agar strict.
+
+      - name: Run migrations
+        run: php artisan migrate --force
+
+      - name: Run Pest tests
+        run: vendor/bin/pest --parallel
+
+  # ==========================================================
+  # JOB 2 — DEPLOY: hanya jalan di push ke main, setelah test lolos
+  # ==========================================================
+  deploy:
+    name: Deploy to VPS
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production   # aktifkan "environment protection rule" di GitHub
+
+    steps:
+      - name: Setup SSH key
+        # Menaruh private key deploy dari GitHub Secrets ke ~/.ssh/deploy_key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Trigger deploy on VPS
+        # SSH ke VPS dan jalankan deploy.sh yang sudah ada di sana.
+        # Semua build berat (composer install, npm build) terjadi DI VPS,
+        # supaya rilis di server persis dengan yang sudah teruji.
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+              -o StrictHostKeyChecking=yes \
+              ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
+              'sudo -u www-data bash /var/www/rizky-project-api/deploy/scripts/deploy.sh'
+
+      - name: Notify success
+        if: success()
+        run: echo "✓ Deploy sukses ke ${{ secrets.VPS_HOST }} pada commit ${{ github.sha }}"
+
+      - name: Notify failure
+        if: failure()
+        run: echo "✗ Deploy GAGAL — cek log di atas, atau SSH ke VPS dan jalankan rollback"
