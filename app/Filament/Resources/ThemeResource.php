@@ -40,7 +40,7 @@ class ThemeResource extends Resource
                 Forms\Components\Select::make('tier')
                     ->options(['free' => 'Free', 'premium' => 'Premium', 'platinum' => 'Platinum'])
                     ->default('free'),
-                Forms\Components\FileUpload::make('preview_image')->image()->directory('themes'),
+                Forms\Components\FileUpload::make('preview_image')->image()->disk('public')->directory('themes'),
                 Forms\Components\Toggle::make('is_active')->default(true),
             ])->columns(2),
 
@@ -79,7 +79,7 @@ class ThemeResource extends Resource
                     Forms\Components\ColorPicker::make('default_options.background.value')->label('Warna')
                         ->visible(fn (Forms\Get $get) => $get('default_options.background.type') !== 'image'),
                     Forms\Components\FileUpload::make('default_options.background.image')->label('Gambar')
-                        ->image()->directory('theme-bg')
+                        ->image()->disk('public')->directory('theme-bg')
                         ->visible(fn (Forms\Get $get) => $get('default_options.background.type') === 'image'),
                     Forms\Components\TextInput::make('default_options.background.overlay_opacity')
                         ->numeric()->minValue(0)->maxValue(1)->step(0.05)->default(0)
@@ -88,9 +88,9 @@ class ThemeResource extends Resource
                 ])->columns(2),
 
                 Forms\Components\Tabs\Tab::make('Ornamen & Sampul')->schema([
-                    Forms\Components\FileUpload::make('default_options.cover.bg_image')->label('Background sampul')->image()->directory('covers'),
-                    Forms\Components\FileUpload::make('default_options.cover.ornament_top')->label('Ornamen atas')->image()->directory('ornaments'),
-                    Forms\Components\FileUpload::make('default_options.cover.ornament_bottom')->label('Ornamen bawah')->image()->directory('ornaments'),
+                    Forms\Components\FileUpload::make('default_options.cover.bg_image')->label('Background sampul')->image()->disk('public')->directory('covers'),
+                    Forms\Components\FileUpload::make('default_options.cover.ornament_top')->label('Ornamen atas')->image()->disk('public')->directory('ornaments'),
+                    Forms\Components\FileUpload::make('default_options.cover.ornament_bottom')->label('Ornamen bawah')->image()->disk('public')->directory('ornaments'),
                     Forms\Components\Toggle::make('default_options.cover.show_monogram')->label('Tampilkan monogram')->default(true),
                 ])->columns(2),
 
@@ -109,7 +109,7 @@ class ThemeResource extends Resource
                                 ->label('Warna')
                                 ->visible(fn (Forms\Get $get) => $get("default_options.sections.$key.background.type") === 'color'),
                             Forms\Components\FileUpload::make("default_options.sections.$key.background.image")
-                                ->label('Gambar')->image()->directory('section-bg')
+                                ->label('Gambar')->image()->disk('public')->directory('section-bg')
                                 ->visible(fn (Forms\Get $get) => $get("default_options.sections.$key.background.type") === 'image'),
                         ])->columns(3)
                     )->values()->all()

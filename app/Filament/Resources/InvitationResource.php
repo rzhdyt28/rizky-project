@@ -50,7 +50,13 @@ class InvitationResource extends Resource
             ]),
 
             Forms\Components\Section::make('Media (Premium+)')->schema([
-                Forms\Components\TextInput::make('music_url')->url()->label('URL musik latar (mp3)'),
+                 Forms\Components\FileUpload::make('music_url')
+                    ->label('Musik latar (mp3)')
+                    ->disk('public')
+                    ->directory('music')
+                    ->acceptedFileTypes(['audio/mpeg', 'audio/mp3'])
+                    ->maxSize(15360) // 15 MB, cukup untuk 1 lagu mp3 kualitas standar
+                    ->helperText('Upload file mp3 milik sendiri.'),
                 Forms\Components\TextInput::make('video_url')->url()->label('URL video (YouTube)')
                     ->helperText('Contoh: https://www.youtube.com/watch?v=xxxx — otomatis diubah jadi embed.'),
             ])->columns(2),
@@ -109,6 +115,7 @@ class InvitationResource extends Resource
             InvitationResource\RelationManagers\StoriesRelationManager::class,
             InvitationResource\RelationManagers\GiftsRelationManager::class,
             InvitationResource\RelationManagers\RsvpsRelationManager::class,
+            InvitationResource\RelationManagers\GalleryPhotosRelationManager::class,
         ];
     }
 

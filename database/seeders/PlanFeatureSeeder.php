@@ -12,18 +12,12 @@ class PlanFeatureSeeder extends Seeder
     {
         $matrix = [
             'free' => [
-                // 'gallery_enabled' => true,  'love_story_enabled' => false, 'gift_enabled' => false,
-                // 'countdown_enabled' => false, 'video_enabled' => false, 'co_host_enabled' => false,
-                // 'maps_enabled' => false, 'custom_font_enabled' => false,
-                // 'custom_background_enabled' => false, 'custom_ornament_enabled' => false,
-                // 'music_enabled' => false, 'remove_branding' => false, 'custom_domain' => false,
-                // 'max_love_stories' => 0,
-                'gallery_enabled' => true, 'love_story_enabled' => true, 'gift_enabled' => true,
-                'countdown_enabled' => true, 'video_enabled' => true, 'co_host_enabled' => true,
-                'maps_enabled' => true, 'custom_font_enabled' => true,
-                'custom_background_enabled' => true, 'custom_ornament_enabled' => true,
-                'music_enabled' => true, 'remove_branding' => true, 'custom_domain' => true,
-                'max_love_stories' => 99,
+                'gallery_enabled' => true,  'love_story_enabled' => false, 'gift_enabled' => false,
+                'countdown_enabled' => false, 'video_enabled' => false, 'co_host_enabled' => false,
+                'maps_enabled' => false, 'custom_font_enabled' => false,
+                'custom_background_enabled' => false, 'custom_ornament_enabled' => false,
+                'music_enabled' => false, 'remove_branding' => false, 'custom_domain' => false,
+                'max_love_stories' => 0,
             ],
             'premium' => [
                 'gallery_enabled' => true, 'love_story_enabled' => true, 'gift_enabled' => true,
