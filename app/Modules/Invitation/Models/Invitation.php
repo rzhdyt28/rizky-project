@@ -27,6 +27,7 @@ class Invitation extends Model
     public function photos()    { return $this->hasMany(GalleryPhoto::class)->orderBy('sort_order'); }
     public function gifts()     { return $this->hasMany(Gift::class); }
     public function rsvps()     { return $this->hasMany(Rsvp::class); }
+    public function guests()    { return $this->hasMany(Guest::class)->latest(); }
     public function guestbook() { return $this->hasMany(GuestbookEntry::class)->where('is_approved', true)->latest(); }
 
     public function getActivitylogOptions(): LogOptions

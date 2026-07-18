@@ -39,7 +39,11 @@ class InvitationController extends Controller
         abort_unless($this->limits->canUseTheme($tenant, $theme->tier), 402,
             "Tema {$theme->name} hanya tersedia di paket {$theme->tier}.");
 
-        $invitation = Invitation::create($data + ['theme_options' => $theme->default_options]);
+        // FIX BUG: dulu default_options tema DISALIN (snapshot) ke undangan,
+        // membuat semua perubahan Tema di Filament tidak pernah berefek karena
+        // key snapshot selalu menang saat merge. Kini theme_options mulai
+        // kosong; merge live dilakukan PublicInvitationController saat render.
+        $invitation = Invitation::create($data + ['theme_options' => []]);
 
         activity()->performedOn($invitation)->log('invitation.created');
 
