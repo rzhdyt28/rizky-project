@@ -30,13 +30,21 @@ class PublicInvitationController extends Controller
 
         $features = app(PlanLimitService::class)->featuresFor($invitation->tenant);
 
-        // Merge default_options tema + override per-undangan
-        $themeDefaults = $invitation->theme?->default_options ?? [];
-        // prune(): field yang DIKOSONGKAN admin di undangan (null/'') dibuang
-        // sebelum merge, sehingga benar-benar jatuh ke default Tema.
-        // Tanpa ini, snapshot lama berisi null tetap menimpa nilai tema.
-        $overrides     = $this->prune($invitation->theme_options ?? []);
+        // Merge BERANTAI: [leluhur tertua -> ... -> parent -> tema ini] lalu
+        // override per-undangan di paling atas. prune() di tiap lapis supaya
+        // field kosong tidak menutupi nilai lapisan di bawahnya.
+        $themeDefaults = [];
+        $chainKeys     = [];
+        foreach (($invitation->theme?->ancestryChain() ?? []) as $th) {
+            $themeDefaults = array_replace_recursive($themeDefaults, $this->prune($th->default_options ?? []));
+            array_unshift($chainKeys, $th->component_key); // [tema ini, parent, ...leluhur]
+        }
+        $overrides = $this->prune($invitation->theme_options ?? []);
         $invitation->setAttribute('theme_options', array_replace_recursive($themeDefaults, $overrides));
+
+        // Frontend mencoba key ini berurutan: kalau folder Vue milik tema anak
+        // tidak ada, otomatis jatuh ke layout parent-nya (pewarisan tampilan).
+        $invitation->theme?->setAttribute('component_keys', $chainKeys);
 
         // Jangan ekspos data tenant/pemilik ke publik
         $invitation->makeHidden('tenant');

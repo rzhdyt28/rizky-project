@@ -7,6 +7,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Modules\Invitation\Models\Invitation;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use OpenSpout\Common\Entity\Row;
+use OpenSpout\Writer\XLSX\Writer;
 
 class RsvpController extends Controller
 {
@@ -44,5 +46,32 @@ class RsvpController extends Controller
                 ->groupBy('attendance')->get(),
             'items'   => $invitation->rsvps()->latest()->paginate(25),
         ];
+    }
+
+    /** Pemilik — export seluruh RSVP ke .xlsx. */
+    public function export(Invitation $invitation)
+    {
+        $this->authorize('view', $invitation);
+
+        $path = tempnam(sys_get_temp_dir(), 'rsvp') . '.xlsx';
+        $writer = new Writer();
+        $writer->openToFile($path);
+        $writer->addRow(Row::fromValues(['Nama Tamu', 'Kehadiran', 'Jumlah', 'No. HP', 'Waktu Konfirmasi']));
+
+        $labels = ['attending' => 'Hadir', 'not_attending' => 'Berhalangan', 'maybe' => 'Ragu'];
+        $invitation->rsvps()->latest()->chunk(200, function ($rows) use ($writer, $labels) {
+            foreach ($rows as $r) {
+                $writer->addRow(Row::fromValues([
+                    $r->guest_name,
+                    $labels[$r->attendance] ?? $r->attendance,
+                    $r->pax,
+                    $r->phone ?? '',
+                    $r->created_at?->format('Y-m-d H:i'),
+                ]));
+            }
+        });
+        $writer->close();
+
+        return response()->download($path, 'rsvp-' . $invitation->slug . '.xlsx')->deleteFileAfterSend();
     }
 }

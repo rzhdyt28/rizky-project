@@ -35,6 +35,15 @@ class ThemeResource extends Resource
                 Forms\Components\Select::make('tier')
                     ->options(['free' => 'Free', 'premium' => 'Premium', 'platinum' => 'Platinum'])
                     ->default('free'),
+                Forms\Components\Select::make('parent_id')
+                    ->label('Tema induk (parent)')
+                    ->relationship(
+                        name: 'parent',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn ($query, ?Theme $record) => $record ? $query->whereKeyNot($record->getKey()) : $query,
+                    )
+                    ->placeholder('— tanpa parent —')
+                    ->helperText('Tema ini MEWARISI seluruh default parent; field yang diisi di sini menimpanya. component_key boleh dibiarkan berbeda dari parent — bila folder Vue-nya tidak ada, frontend otomatis memakai layout parent.'),
                 Forms\Components\FileUpload::make('preview_image')->image()->disk('public')->directory('themes'),
                 Forms\Components\Toggle::make('is_active')->default(true),
             ])->columns(2),
@@ -51,35 +60,32 @@ class ThemeResource extends Resource
                     Forms\Components\ColorPicker::make('default_options.colors.gold')->label('Aksen dekoratif'),
                     Forms\Components\ColorPicker::make('default_options.colors.button_bg')->label('Tombol: background'),
                     Forms\Components\ColorPicker::make('default_options.colors.button_text')->label('Tombol: teks'),
-                    Forms\Components\Select::make('default_options.fonts.heading')->label('Font judul')->options([
-                        'Cormorant Garamond' => 'Cormorant Garamond',
-                        'Playfair Display'   => 'Playfair Display',
-                        'Cinzel'             => 'Cinzel',
-                        'Lora'               => 'Lora',
-                    ])->placeholder('Bawaan tema'),
-                    Forms\Components\Select::make('default_options.fonts.body')->label('Font isi')->options([
-                        'Jost'      => 'Jost',
-                        'Poppins'   => 'Poppins',
-                        'Lato'      => 'Lato',
-                        'Open Sans' => 'Open Sans',
-                        'Nunito'    => 'Nunito',
-                    ])->placeholder('Bawaan tema'),
-                    Forms\Components\Select::make('default_options.fonts.script')->label('Font kaligrafi')->options([
-                        'Great Vibes' => 'Great Vibes',
-                    ])->placeholder('Bawaan tema'),
+                    Forms\Components\TextInput::make('default_options.fonts.heading')
+                        ->label('Font judul')->placeholder('Bawaan tema')
+                        ->datalist(['Cormorant Garamond', 'Playfair Display', 'Cinzel', 'Lora', 'EB Garamond', 'Marcellus'])
+                        ->helperText('Bebas ketik nama font Google Fonts apa pun — dimuat otomatis.'),
+                    Forms\Components\TextInput::make('default_options.fonts.body')
+                        ->label('Font isi')->placeholder('Bawaan tema')
+                        ->datalist(['Jost', 'Poppins', 'Lato', 'Open Sans', 'Nunito', 'Inter', 'Mulish']),
+                    Forms\Components\TextInput::make('default_options.fonts.script')
+                        ->label('Font kaligrafi')->placeholder('Bawaan tema')
+                        ->datalist(['Great Vibes', 'Dancing Script', 'Parisienne', 'Allura', 'Sacramento', 'Alex Brush']),
+                    Forms\Components\TextInput::make('default_options.type.title_size')
+                        ->label('Ukuran judul (px)')->numeric()->minValue(14)->maxValue(96)->placeholder('bawaan tema'),
+                    Forms\Components\ColorPicker::make('default_options.type.title_color')->label('Warna judul'),
+                    Forms\Components\TextInput::make('default_options.type.body_size')
+                        ->label('Ukuran isi (px)')->numeric()->minValue(10)->maxValue(28)->placeholder('bawaan tema'),
+                    Forms\Components\ColorPicker::make('default_options.type.body_color')->label('Warna isi'),
+                    Forms\Components\TextInput::make('default_options.fonts.css_url')
+                        ->label('URL CSS font (non-Google)')->url()
+                        ->helperText('Untuk font di luar Google Fonts (Adobe Fonts / self-host): tempel link stylesheet-nya.')
+                        ->columnSpan(2),
                 ])->columns(3),
 
                 Forms\Components\Tabs\Tab::make('Ornamen & Latar')->schema([
                     Forms\Components\Placeholder::make('info_cover')
                         ->label('')
-                        ->content('Default untuk SEMUA undangan bertema ini. Tiap undangan bisa menimpanya lewat form Undangan.'),
-                    Forms\Components\Select::make('default_options.cover.ornament_asset')
-                        ->label('Ornamen dalam kartu — dari Pustaka')
-                        ->options(fn () => ThemeAsset::optionsFor('ornament') + ThemeAsset::optionsFor('divider'))
-                        ->searchable()->placeholder('— pilih dari pustaka —'),
-                    Forms\Components\FileUpload::make('default_options.cover.ornament_upload')
-                        ->label('Ornamen dalam kartu — upload')
-                        ->image()->disk('public')->directory('ornaments'),
+                        ->content('Default untuk SEMUA undangan bertema ini. Tiap undangan bisa menimpanya lewat form Undangan. (Ornamen di dalam kartu sudah DIHAPUS dari produk.)'),
                     Forms\Components\Select::make('default_options.background.ornament_asset')
                         ->label('Ornamen background halaman — dari Pustaka')
                         ->options(fn () => ThemeAsset::optionsFor('ornament') + ThemeAsset::optionsFor('divider'))
@@ -144,9 +150,20 @@ class ThemeResource extends Resource
                     Forms\Components\Select::make('default_options.layout.section_height')
                         ->label('Tinggi section')
                         ->options([
-                            'full' => 'Satu layar penuh (default)',
-                            'auto' => 'Setinggi konten (tanpa gap)',
+                            'full'  => 'Satu layar penuh (default)',
+                            'auto'  => 'Setinggi konten (tanpa gap)',
+                            'smart' => 'Otomatis: penuh jika ada background',
                         ])->placeholder('Satu layar penuh (default)'),
+                    Forms\Components\Select::make('default_options.card.style')
+                        ->label('Gaya kartu')
+                        ->options([
+                            'default'  => '1. Bawaan tema',
+                            'glass'    => '2. Glass — kaca buram (blur)',
+                            'outline'  => '3. Outline — garis tepi',
+                            'flat'     => '4. Flat — tanpa shadow',
+                            'gradient' => '5. Gradient — gradasi lembut',
+                            'stamp'    => '6. Stamp — tepi perangko',
+                        ])->placeholder('Bawaan tema'),
                     Forms\Components\ColorPicker::make('default_options.card.bg')->label('Warna kartu'),
                     Forms\Components\TextInput::make('default_options.card.opacity')->label('Opacity kartu (%)')
                         ->numeric()->minValue(0)->maxValue(100)->placeholder('100'),

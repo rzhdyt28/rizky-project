@@ -2,11 +2,14 @@
 
 namespace App\Filament\Resources\InvitationResource\RelationManagers;
 
+use App\Modules\Invitation\Support\GuestSheetImporter;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Storage;
 
 class GuestsRelationManager extends RelationManager
 {
@@ -35,7 +38,43 @@ class GuestsRelationManager extends RelationManager
                     ->state(fn ($record) => '/i/' . $record->invitation->slug . '?to=' . rawurlencode($record->name))
                     ->copyable()->copyMessage('Path tersalin — tambahkan domain frontend di depannya.'),
             ])
-            ->headerActions([Tables\Actions\CreateAction::make()->label('Tambah tamu')])
+            ->headerActions([
+                Tables\Actions\CreateAction::make()->label('Tambah tamu'),
+                Tables\Actions\Action::make('import')
+                    ->label('Import Excel/CSV')
+                    ->icon('heroicon-o-arrow-up-tray')
+                    ->color('success')
+                    ->modalDescription('Format kolom: A = Nama (wajib), B = No. WhatsApp, C = Catatan. Baris judul (header) boleh ada — terdeteksi otomatis. Maks. ' . GuestSheetImporter::MAX_ROWS . ' baris sekali import.')
+                    ->form([
+                        Forms\Components\FileUpload::make('file')
+                            ->label('File .xlsx atau .csv')
+                            ->disk('local')->directory('tmp-imports')
+                            ->acceptedFileTypes([
+                                'text/csv', 'text/plain', 'application/csv',
+                                'application/vnd.ms-excel',
+                                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            ])
+                            ->required(),
+                    ])
+                    ->action(function (array $data, RelationManager $livewire): void {
+                        $path = Storage::disk('local')->path($data['file']);
+                        try {
+                            $rows = GuestSheetImporter::parse($path);
+                            $livewire->getOwnerRecord()->guests()->createMany($rows);
+                            Notification::make()
+                                ->title(count($rows) . ' tamu berhasil di-import')
+                                ->success()->send();
+                        } catch (\Throwable $e) {
+                            Notification::make()
+                                ->title('Import gagal')
+                                ->body($e->getMessage())
+                                ->danger()->send();
+                        } finally {
+                            // File sementara selalu dibersihkan, sukses maupun gagal.
+                            Storage::disk('local')->delete($data['file']);
+                        }
+                    }),
+            ])
             ->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()]);
     }
 }

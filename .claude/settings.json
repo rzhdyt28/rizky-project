@@ -1,0 +1,34 @@
+{
+  "env": {
+    "GRAPHIFY_QUERY_LOG_DISABLE": "1",
+    "GRAPHIFY_VIZ_NODE_LIMIT": "10000"
+  },
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/rizky/AppData/Local/Temp/claude/c--laragon-www-rizky-project/3d1a6715-c91c-42e3-be9a-9a128327f9eb/scratchpad/**)",
+      "Bash(curl -sv https://pypi.org/pypi/graphifyy/json -o /c/Users/rizky/AppData/Local/Temp/claude/c--laragon-www-rizky-project/3d1a6715-c91c-42e3-be9a-9a128327f9eb/scratchpad/g.json)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/rizky/AppData/Roaming/uv/tools/graphifyy/Scripts/graphify.exe hook-guard search"
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/rizky/AppData/Roaming/uv/tools/graphifyy/Scripts/graphify.exe hook-guard read"
+          }
+        ]
+      }
+    ]
+  }
+}

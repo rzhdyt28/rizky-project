@@ -4,11 +4,14 @@ namespace App\Modules\Invitation\Http\Controllers;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Modules\Invitation\Models\GuestbookEntry;
 use App\Modules\Invitation\Models\Invitation;
 use Illuminate\Http\Request;
 
 class GuestbookController extends Controller
 {
+    use AuthorizesRequests;
+
     public function store(Request $request, string $slug)
     {
         $invitation = Invitation::withoutGlobalScope('tenant')
@@ -24,5 +27,35 @@ class GuestbookController extends Controller
         $entry = $invitation->guestbook()->create($data + ['is_approved' => true]);
 
         return response()->json($entry, 201);
+    }
+
+    /** Pemilik — semua ucapan (termasuk yang disembunyikan), untuk moderasi. */
+    public function index(Invitation $invitation)
+    {
+        $this->authorize('view', $invitation);
+
+        return $invitation->guestbookEntries()->latest()->get();
+    }
+
+    /** Pemilik — sembunyikan/tampilkan ucapan. */
+    public function update(Request $request, Invitation $invitation, GuestbookEntry $entry)
+    {
+        $this->authorize('update', $invitation);
+        abort_unless($entry->invitation_id === $invitation->id, 404);
+
+        $data = $request->validate(['is_approved' => ['required', 'boolean']]);
+        $entry->update($data);
+
+        return $entry->fresh();
+    }
+
+    public function destroy(Invitation $invitation, GuestbookEntry $entry)
+    {
+        $this->authorize('update', $invitation);
+        abort_unless($entry->invitation_id === $invitation->id, 404);
+
+        $entry->delete();
+
+        return response()->noContent();
     }
 }

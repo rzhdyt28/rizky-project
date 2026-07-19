@@ -60,11 +60,17 @@ class AuthController extends Controller
     public function me(Request $request)
     {
         $user = $request->user();
+        $tenant = $user->tenants()->first();
+        $subscription = $tenant?->activeSubscription()->with('plan')->first();
 
         return response()->json([
             'user'   => $user->only('id', 'name', 'email'),
             'roles'  => $user->getRoleNames(),
-            'tenant' => $user->tenants()->first()?->only('id', 'name'),
+            'tenant' => $tenant?->only('id', 'name'),
+            'subscription' => $subscription ? [
+                'plan_name' => $subscription->plan?->name,
+                'ends_at'   => $subscription->ends_at,
+            ] : null,
         ]);
     }
 
