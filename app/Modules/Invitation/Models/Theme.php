@@ -13,6 +13,9 @@ class Theme extends Model
     public function parent()   { return $this->belongsTo(Theme::class, 'parent_id'); }
     public function children() { return $this->hasMany(Theme::class, 'parent_id'); }
 
+    /** Kalau terisi, tema ini PRIVAT -- child theme milik 1 undangan (bukan tema dasar/publik). */
+    public function invitation() { return $this->belongsTo(Invitation::class, 'invitation_id'); }
+
     /**
      * Rantai pewarisan: [leluhur tertua, ..., parent, tema ini].
      * Guard kedalaman 6 mencegah loop tak sengaja (A->B->A).

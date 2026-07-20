@@ -2,9 +2,9 @@
 
 namespace App\Modules\Invitation\Http\Controllers;
 
+use App\Modules\Invitation\Http\Controllers\Concerns\ManagesInvitationChildren;
 use App\Modules\Invitation\Models\Invitation;
 use App\Modules\Invitation\Models\InvitationEvent;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -14,7 +14,7 @@ use Illuminate\Routing\Controller;
  */
 class EventController extends Controller
 {
-    use AuthorizesRequests;
+    use ManagesInvitationChildren;
 
     public function index(Invitation $invitation)
     {
@@ -35,7 +35,7 @@ class EventController extends Controller
     public function update(Request $request, Invitation $invitation, InvitationEvent $event)
     {
         $this->authorize('update', $invitation);
-        abort_unless($event->invitation_id === $invitation->id, 404);
+        $this->ensureBelongsToInvitation($event, $invitation);
 
         $event->update($this->validated($request, sometimes: true));
 
@@ -45,7 +45,7 @@ class EventController extends Controller
     public function destroy(Invitation $invitation, InvitationEvent $event)
     {
         $this->authorize('update', $invitation);
-        abort_unless($event->invitation_id === $invitation->id, 404);
+        $this->ensureBelongsToInvitation($event, $invitation);
 
         $event->delete();
 
@@ -54,13 +54,11 @@ class EventController extends Controller
 
     private function validated(Request $request, bool $sometimes = false): array
     {
-        $req = fn (string $rule) => $sometimes ? 'sometimes' : $rule;
-
         return $request->validate([
-            'title'      => [$req('required'), 'string', 'max:150'],
-            'starts_at'  => [$req('required'), 'date'],
+            'title'      => [$this->req($sometimes), 'string', 'max:150'],
+            'starts_at'  => [$this->req($sometimes), 'date'],
             'ends_at'    => ['nullable', 'date', 'after_or_equal:starts_at'],
-            'venue_name' => [$req('required'), 'string', 'max:150'],
+            'venue_name' => [$this->req($sometimes), 'string', 'max:150'],
             'address'    => ['nullable', 'string', 'max:500'],
             'maps_url'   => ['nullable', 'url', 'max:500'],
             'sort_order' => ['nullable', 'integer'],

@@ -3,13 +3,13 @@
 namespace App\Modules\Invitation\Http\Controllers;
 
 use App\Core\Services\PlanLimitService;
+use App\Modules\Invitation\Http\Controllers\Concerns\ManagesInvitationChildren;
 use App\Modules\Invitation\Models\Guest;
 use App\Modules\Invitation\Models\Invitation;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Modules\Invitation\Support\GuestSheetImporter;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use OpenSpout\Reader\CSV\Reader as CsvReader;
-use OpenSpout\Reader\XLSX\Reader as XlsxReader;
+use RuntimeException;
 
 /**
  * Manajemen tamu milik PEMILIK undangan (dipakai dashboard Vue).
@@ -17,7 +17,7 @@ use OpenSpout\Reader\XLSX\Reader as XlsxReader;
  */
 class GuestController extends Controller
 {
-    use AuthorizesRequests;
+    use ManagesInvitationChildren;
 
     public function __construct(private PlanLimitService $limits) {}
 
@@ -44,7 +44,7 @@ class GuestController extends Controller
     public function destroy(Invitation $invitation, Guest $guest)
     {
         $this->authorize('update', $invitation);
-        abort_unless($guest->invitation_id === $invitation->id, 404);
+        $this->ensureBelongsToInvitation($guest, $invitation);
 
         $guest->delete();
 
@@ -52,9 +52,10 @@ class GuestController extends Controller
     }
 
     /**
-     * Import tamu dari Excel (.xlsx) / CSV — kolom: Nama, No. WA (baris 1 =
-     * header, dilewati). Maks 2000 baris. Baris tanpa nama dilewati & dicatat
-     * di "skipped". Berhenti kalau kuota max_guests paket sudah tercapai.
+     * Import tamu dari Excel (.xlsx) / CSV — parsing didelegasikan ke
+     * GuestSheetImporter (dipakai juga oleh GuestsRelationManager Filament)
+     * supaya deteksi delimiter/header konsisten di kedua tempat. Berhenti
+     * menambah baris begitu kuota max_guests paket tercapai.
      */
     public function import(Request $request, Invitation $invitation)
     {
@@ -62,46 +63,25 @@ class GuestController extends Controller
 
         $request->validate(['file' => ['required', 'file', 'mimes:xlsx,csv,txt', 'max:5120']]);
 
-        $path = $request->file('file')->getRealPath();
-        $ext = strtolower($request->file('file')->getClientOriginalExtension());
-        $reader = $ext === 'csv' || $ext === 'txt' ? new CsvReader() : new XlsxReader();
-        $reader->open($path);
+        try {
+            $rows = GuestSheetImporter::parse($request->file('file')->getRealPath());
+        } catch (RuntimeException $e) {
+            abort(422, $e->getMessage());
+        }
 
-        $max = $this->limits->planFor($invitation->tenant)?->max_guests ?? 0;
         $existing = $invitation->guests()->count();
-
         $created = 0;
         $skipped = [];
-        $rowNum = 0;
 
-        foreach ($reader->getSheetIterator() as $sheet) {
-            foreach ($sheet->getRowIterator() as $row) {
-                $rowNum++;
-                if ($rowNum === 1) {
-                    continue; // header
-                }
-                if ($rowNum > 2001) {
-                    break 2; // maks 2000 baris data
-                }
-
-                $cells = $row->toArray();
-                $name = trim((string) ($cells[0] ?? ''));
-                $phone = trim((string) ($cells[1] ?? '')) ?: null;
-
-                if ($name === '') {
-                    $skipped[] = "Baris {$rowNum}: nama kosong";
-                    continue;
-                }
-                if ($existing + $created >= $max) {
-                    $skipped[] = "Baris {$rowNum}: kuota tamu paket sudah penuh";
-                    continue;
-                }
-
-                $invitation->guests()->create(['name' => $name, 'phone' => $phone]);
-                $created++;
+        foreach ($rows as $i => $row) {
+            if (! $this->limits->canAddGuest($invitation->tenant, $existing + $created)) {
+                $skipped[] = 'Baris ' . ($i + 1) . ': kuota tamu paket sudah penuh';
+                continue;
             }
+
+            $invitation->guests()->create($row);
+            $created++;
         }
-        $reader->close();
 
         return response()->json([
             'created' => $created,

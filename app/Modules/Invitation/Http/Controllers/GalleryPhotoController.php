@@ -3,9 +3,9 @@
 namespace App\Modules\Invitation\Http\Controllers;
 
 use App\Core\Services\PlanLimitService;
+use App\Modules\Invitation\Http\Controllers\Concerns\ManagesInvitationChildren;
 use App\Modules\Invitation\Models\GalleryPhoto;
 use App\Modules\Invitation\Models\Invitation;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -15,7 +15,7 @@ use Illuminate\Routing\Controller;
  */
 class GalleryPhotoController extends Controller
 {
-    use AuthorizesRequests;
+    use ManagesInvitationChildren;
 
     public function __construct(private PlanLimitService $limits) {}
 
@@ -52,7 +52,7 @@ class GalleryPhotoController extends Controller
     public function update(Request $request, Invitation $invitation, GalleryPhoto $photo)
     {
         $this->authorize('update', $invitation);
-        abort_unless($photo->invitation_id === $invitation->id, 404);
+        $this->ensureBelongsToInvitation($photo, $invitation);
 
         $data = $request->validate(['caption' => ['nullable', 'string', 'max:255']]);
         $photo->update($data);
@@ -63,7 +63,7 @@ class GalleryPhotoController extends Controller
     public function destroy(Invitation $invitation, GalleryPhoto $photo)
     {
         $this->authorize('update', $invitation);
-        abort_unless($photo->invitation_id === $invitation->id, 404);
+        $this->ensureBelongsToInvitation($photo, $invitation);
 
         $photo->delete();
 

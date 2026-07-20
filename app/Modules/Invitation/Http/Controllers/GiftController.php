@@ -2,9 +2,9 @@
 
 namespace App\Modules\Invitation\Http\Controllers;
 
+use App\Modules\Invitation\Http\Controllers\Concerns\ManagesInvitationChildren;
 use App\Modules\Invitation\Models\Gift;
 use App\Modules\Invitation\Models\Invitation;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Validation\Rule;
@@ -16,7 +16,7 @@ use Illuminate\Validation\Rule;
  */
 class GiftController extends Controller
 {
-    use AuthorizesRequests;
+    use ManagesInvitationChildren;
 
     public function index(Invitation $invitation)
     {
@@ -40,7 +40,7 @@ class GiftController extends Controller
     public function update(Request $request, Invitation $invitation, Gift $gift)
     {
         $this->authorize('update', $invitation);
-        abort_unless($gift->invitation_id === $invitation->id, 404);
+        $this->ensureBelongsToInvitation($gift, $invitation);
 
         $data = $this->validated($request, sometimes: true);
         if ($request->hasFile('qris_image')) {
@@ -54,7 +54,7 @@ class GiftController extends Controller
     public function destroy(Invitation $invitation, Gift $gift)
     {
         $this->authorize('update', $invitation);
-        abort_unless($gift->invitation_id === $invitation->id, 404);
+        $this->ensureBelongsToInvitation($gift, $invitation);
 
         $gift->delete();
 
@@ -63,10 +63,8 @@ class GiftController extends Controller
 
     private function validated(Request $request, bool $sometimes = false): array
     {
-        $req = fn (string $rule) => $sometimes ? 'sometimes' : $rule;
-
         return $request->validate([
-            'type'             => [$req('required'), Rule::in(['bank', 'ewallet', 'qris', 'address'])],
+            'type'             => [$this->req($sometimes), Rule::in(['bank', 'ewallet', 'qris', 'address'])],
             'provider'         => ['nullable', 'string', 'max:80'],
             'account_name'     => ['nullable', 'string', 'max:120'],
             'account_number'   => ['nullable', 'string', 'max:80'],

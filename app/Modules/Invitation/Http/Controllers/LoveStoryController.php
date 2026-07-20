@@ -3,9 +3,9 @@
 namespace App\Modules\Invitation\Http\Controllers;
 
 use App\Core\Services\PlanLimitService;
+use App\Modules\Invitation\Http\Controllers\Concerns\ManagesInvitationChildren;
 use App\Modules\Invitation\Models\Invitation;
 use App\Modules\Invitation\Models\LoveStory;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -15,7 +15,7 @@ use Illuminate\Routing\Controller;
  */
 class LoveStoryController extends Controller
 {
-    use AuthorizesRequests;
+    use ManagesInvitationChildren;
 
     public function __construct(private PlanLimitService $limits) {}
 
@@ -30,9 +30,10 @@ class LoveStoryController extends Controller
     {
         $this->authorize('update', $invitation);
 
-        $max = $this->limits->planFor($invitation->tenant)?->max_love_stories ?? 0;
-        abort_unless($invitation->stories()->count() < $max, 402,
-            'Kuota kisah cinta pada paketmu sudah habis. Upgrade paket untuk menambah.');
+        abort_unless(
+            $this->limits->canAddStory($invitation->tenant, $invitation->stories()->count()),
+            402, 'Kuota kisah cinta pada paketmu sudah habis. Upgrade paket untuk menambah.'
+        );
 
         $data = $this->validated($request);
         if ($request->hasFile('photo')) {
@@ -45,7 +46,7 @@ class LoveStoryController extends Controller
     public function update(Request $request, Invitation $invitation, LoveStory $story)
     {
         $this->authorize('update', $invitation);
-        abort_unless($story->invitation_id === $invitation->id, 404);
+        $this->ensureBelongsToInvitation($story, $invitation);
 
         $data = $this->validated($request, sometimes: true);
         if ($request->hasFile('photo')) {
@@ -59,7 +60,7 @@ class LoveStoryController extends Controller
     public function destroy(Invitation $invitation, LoveStory $story)
     {
         $this->authorize('update', $invitation);
-        abort_unless($story->invitation_id === $invitation->id, 404);
+        $this->ensureBelongsToInvitation($story, $invitation);
 
         $story->delete();
 
@@ -68,12 +69,10 @@ class LoveStoryController extends Controller
 
     private function validated(Request $request, bool $sometimes = false): array
     {
-        $req = fn (string $rule) => $sometimes ? 'sometimes' : $rule;
-
         return $request->validate([
-            'title'       => [$req('required'), 'string', 'max:150'],
+            'title'       => [$this->req($sometimes), 'string', 'max:150'],
             'happened_at' => ['nullable', 'date'],
-            'story'       => [$req('required'), 'string', 'max:2000'],
+            'story'       => [$this->req($sometimes), 'string', 'max:2000'],
             'photo'       => ['nullable', 'image', 'max:2048'],
             'sort_order'  => ['nullable', 'integer'],
         ]);

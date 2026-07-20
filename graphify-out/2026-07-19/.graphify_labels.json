@@ -102,5 +102,10 @@
   "100": "CLAUDE.md",
   "101": "extraction-spec.md",
   "102": "cleanup-old-project.md",
-  "103": "BOOTSTRAP-REGISTRATION.md"
+  "103": "BOOTSTRAP-REGISTRATION.md",
+  "104": "MildnessThemes.php",
+  "105": "GuestController",
+  "106": "ThemeResource.php",
+  "107": ".run",
+  "108": "autoload-dev"
 }

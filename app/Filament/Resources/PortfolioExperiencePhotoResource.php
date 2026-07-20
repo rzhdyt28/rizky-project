@@ -16,7 +16,7 @@ class PortfolioExperiencePhotoResource extends Resource
     protected static ?string $model = ExperiencePhoto::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-photo';
-    protected static ?string $navigationGroup = 'Portfolio';
+    protected static ?string $navigationGroup = 'Portofolio';
     protected static ?string $navigationLabel = 'Foto Dokumentasi';
     protected static ?string $modelLabel = 'Foto Dokumentasi';
 

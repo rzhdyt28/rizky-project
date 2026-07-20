@@ -3,14 +3,14 @@
 namespace App\Modules\Invitation\Http\Controllers;
 
 use Illuminate\Routing\Controller;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Modules\Invitation\Http\Controllers\Concerns\ManagesInvitationChildren;
 use App\Modules\Invitation\Models\GuestbookEntry;
 use App\Modules\Invitation\Models\Invitation;
 use Illuminate\Http\Request;
 
 class GuestbookController extends Controller
 {
-    use AuthorizesRequests;
+    use ManagesInvitationChildren;
 
     public function store(Request $request, string $slug)
     {
@@ -41,7 +41,7 @@ class GuestbookController extends Controller
     public function update(Request $request, Invitation $invitation, GuestbookEntry $entry)
     {
         $this->authorize('update', $invitation);
-        abort_unless($entry->invitation_id === $invitation->id, 404);
+        $this->ensureBelongsToInvitation($entry, $invitation);
 
         $data = $request->validate(['is_approved' => ['required', 'boolean']]);
         $entry->update($data);
@@ -52,7 +52,7 @@ class GuestbookController extends Controller
     public function destroy(Invitation $invitation, GuestbookEntry $entry)
     {
         $this->authorize('update', $invitation);
-        abort_unless($entry->invitation_id === $invitation->id, 404);
+        $this->ensureBelongsToInvitation($entry, $invitation);
 
         $entry->delete();
 

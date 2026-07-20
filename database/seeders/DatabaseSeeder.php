@@ -41,14 +41,34 @@ class DatabaseSeeder extends Seeder
             Plan::updateOrCreate(['slug' => $plan['slug']], $plan);
         }
 
-        // ---- Tema bawaan (component_key = folder di resources/js/themes) ----
+        // ---- Tema bawaan (component_key = folder Vue di rizky-project-web:
+        //      src/modules/invitation/themes/<key>/) — HARUS match folder yang
+        //      benar-benar ada di FE, kalau tidak tema tidak akan bisa dirender.
+        //      Warna/font di sini disalin dari tokens.js masing-masing tema
+        //      (satu sumber; kalau kosong pun FE tetap fallback ke tokens.js). ----
         foreach ([
-            ['name' => 'Elegant Botanical', 'component_key' => 'elegant', 'tier' => 'free',
-             'default_options' => ['accent' => '#2F4A3C', 'paper' => '#F7F4EC', 'ink' => '#22301F']],
-            ['name' => 'Rustic Warm',       'component_key' => 'rustic',  'tier' => 'premium',
-             'default_options' => ['accent' => '#8A5A33', 'paper' => '#FBF6EF', 'ink' => '#3B2A1A']],
+            ['name' => 'Mildness', 'component_key' => 'mildness', 'tier' => 'platinum', 'default_options' => [
+                'colors' => [
+                    'accent' => '#3F5B7C', 'paper' => '#FBFCFE', 'ink' => '#46586A',
+                    'gold' => '#8AA1BC', 'button_bg' => '#3F5B7C', 'button_text' => '#FFFFFF',
+                ],
+                'fonts' => ['heading' => 'Cormorant Garamond', 'body' => 'Jost', 'script' => 'Great Vibes'],
+            ]],
+            ['name' => 'Senja', 'component_key' => 'senja', 'tier' => 'platinum', 'default_options' => [
+                'colors' => [
+                    'accent' => '#8A4B2A', 'paper' => '#FFF8F0', 'ink' => '#5A4234',
+                    'gold' => '#D9A05B', 'button_bg' => '#F5E9D7', 'button_text' => '#4A2318',
+                ],
+                'fonts' => ['heading' => 'Cormorant Garamond', 'body' => 'Jost', 'script' => 'Great Vibes'],
+            ]],
         ] as $theme) {
-            Theme::updateOrCreate(['component_key' => $theme['component_key']], $theme);
+            Theme::updateOrCreate(['component_key' => $theme['component_key']], $theme + ['is_active' => true]);
         }
+
+        // ---- Pustaka aset + undangan demo lengkap (1 per tema aktif) ----
+        $this->call([
+            ThemeAssetSeeder::class,
+            InvitationDemoSeeder::class,
+        ]);
     }
 }

@@ -30,17 +30,20 @@ class PublicInvitationController extends Controller
 
         $features = app(PlanLimitService::class)->featuresFor($invitation->tenant);
 
-        // Merge BERANTAI: [leluhur tertua -> ... -> parent -> tema ini] lalu
-        // override per-undangan di paling atas. prune() di tiap lapis supaya
-        // field kosong tidak menutupi nilai lapisan di bawahnya.
+        // Merge BERANTAI: [leluhur tertua -> ... -> tema dasar -> child theme
+        // privat undangan ini] -- child theme (leaf) SUDAH otomatis jadi
+        // "override" karena dia paling akhir di-merge (array_replace_recursive,
+        // leaf menang per-key). Tidak ada lagi Invitation.theme_options
+        // terpisah -- semua pengaturan visual hidup di child theme (lihat
+        // InvitationThemeProvisioner & InvitationLookResource). prune() di
+        // tiap lapis supaya field kosong tidak menutupi nilai lapisan di bawahnya.
         $themeDefaults = [];
         $chainKeys     = [];
         foreach (($invitation->theme?->ancestryChain() ?? []) as $th) {
             $themeDefaults = array_replace_recursive($themeDefaults, $this->prune($th->default_options ?? []));
             array_unshift($chainKeys, $th->component_key); // [tema ini, parent, ...leluhur]
         }
-        $overrides = $this->prune($invitation->theme_options ?? []);
-        $invitation->setAttribute('theme_options', array_replace_recursive($themeDefaults, $overrides));
+        $invitation->setAttribute('theme_options', $themeDefaults);
 
         // Frontend mencoba key ini berurutan: kalau folder Vue milik tema anak
         // tidak ada, otomatis jatuh ke layout parent-nya (pewarisan tampilan).

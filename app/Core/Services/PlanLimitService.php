@@ -30,6 +30,20 @@ class PlanLimitService
         return $plan && $invitationPhotoCount < $plan->max_photos;
     }
 
+    public function canAddStory(Tenant $tenant, int $invitationStoryCount): bool
+    {
+        $plan = $this->planFor($tenant);
+
+        return $plan && $invitationStoryCount < $plan->max_love_stories;
+    }
+
+    public function canAddGuest(Tenant $tenant, int $invitationGuestCount): bool
+    {
+        $plan = $this->planFor($tenant);
+
+        return $plan && $invitationGuestCount < $plan->max_guests;
+    }
+
     public function canUseCustomDomain(Tenant $tenant): bool
     {
         return (bool) $this->planFor($tenant)?->custom_domain;

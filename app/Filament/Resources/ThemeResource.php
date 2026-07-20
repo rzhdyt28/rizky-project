@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Support\ThemeOptionsSchema;
 use App\Modules\Invitation\Models\Theme;
 use App\Modules\Invitation\Models\ThemeAsset;
 use Filament\Forms;
@@ -9,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * TEMA — form DISEDERHANAKAN (v2 arsitektur).
@@ -23,6 +25,19 @@ class ThemeResource extends Resource
     protected static ?string $model = Theme::class;
     protected static ?string $navigationIcon = 'heroicon-o-paint-brush';
     protected static ?string $navigationGroup = 'Konten';
+
+    /**
+     * Tema privat milik 1 undangan (invitation_id terisi -- lihat
+     * InvitationLookResource) TIDAK PERNAH boleh muncul di sini. Resource
+     * ini murni untuk tema DASAR/publik yang bisa dipilih banyak undangan.
+     * Discope di level query dasar (bukan cuma table()) supaya list, edit,
+     * view, delete, dan global search semuanya konsisten -- termasuk kalau
+     * ada yang coba akses /admin/themes/{child_id}/edit langsung, akan 404.
+     */
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->whereNull('invitation_id');
+    }
 
     public static function form(Form $form): Form
     {
@@ -40,7 +55,8 @@ class ThemeResource extends Resource
                     ->relationship(
                         name: 'parent',
                         titleAttribute: 'name',
-                        modifyQueryUsing: fn ($query, ?Theme $record) => $record ? $query->whereKeyNot($record->getKey()) : $query,
+                        modifyQueryUsing: fn ($query, ?Theme $record) => ($record ? $query->whereKeyNot($record->getKey()) : $query)
+                            ->whereNull('invitation_id'),
                     )
                     ->placeholder('— tanpa parent —')
                     ->helperText('Tema ini MEWARISI seluruh default parent; field yang diisi di sini menimpanya. component_key boleh dibiarkan berbeda dari parent — bila folder Vue-nya tidak ada, frontend otomatis memakai layout parent.'),
@@ -50,37 +66,22 @@ class ThemeResource extends Resource
 
             Forms\Components\Tabs::make('Opsi Desain Default')->tabs([
 
-                Forms\Components\Tabs\Tab::make('Warna & Font')->schema([
+                Forms\Components\Tabs\Tab::make('Warna & Font')->schema(array_merge([
                     Forms\Components\Placeholder::make('info_tokens')
                         ->label('')
-                        ->content('Kosongkan = memakai bawaan tema (tokens.js di frontend). Isi hanya kalau mau menimpa.'),
-                    Forms\Components\ColorPicker::make('default_options.colors.accent')->label('Aksen utama'),
-                    Forms\Components\ColorPicker::make('default_options.colors.paper')->label('Permukaan kartu'),
-                    Forms\Components\ColorPicker::make('default_options.colors.ink')->label('Warna teks'),
-                    Forms\Components\ColorPicker::make('default_options.colors.gold')->label('Aksen dekoratif'),
-                    Forms\Components\ColorPicker::make('default_options.colors.button_bg')->label('Tombol: background'),
-                    Forms\Components\ColorPicker::make('default_options.colors.button_text')->label('Tombol: teks'),
-                    Forms\Components\TextInput::make('default_options.fonts.heading')
-                        ->label('Font judul')->placeholder('Bawaan tema')
-                        ->datalist(['Cormorant Garamond', 'Playfair Display', 'Cinzel', 'Lora', 'EB Garamond', 'Marcellus'])
-                        ->helperText('Bebas ketik nama font Google Fonts apa pun — dimuat otomatis.'),
-                    Forms\Components\TextInput::make('default_options.fonts.body')
-                        ->label('Font isi')->placeholder('Bawaan tema')
-                        ->datalist(['Jost', 'Poppins', 'Lato', 'Open Sans', 'Nunito', 'Inter', 'Mulish']),
-                    Forms\Components\TextInput::make('default_options.fonts.script')
-                        ->label('Font kaligrafi')->placeholder('Bawaan tema')
-                        ->datalist(['Great Vibes', 'Dancing Script', 'Parisienne', 'Allura', 'Sacramento', 'Alex Brush']),
-                    Forms\Components\TextInput::make('default_options.type.title_size')
-                        ->label('Ukuran judul (px)')->numeric()->minValue(14)->maxValue(96)->placeholder('bawaan tema'),
-                    Forms\Components\ColorPicker::make('default_options.type.title_color')->label('Warna judul'),
-                    Forms\Components\TextInput::make('default_options.type.body_size')
-                        ->label('Ukuran isi (px)')->numeric()->minValue(10)->maxValue(28)->placeholder('bawaan tema'),
-                    Forms\Components\ColorPicker::make('default_options.type.body_color')->label('Warna isi'),
-                    Forms\Components\TextInput::make('default_options.fonts.css_url')
-                        ->label('URL CSS font (non-Google)')->url()
-                        ->helperText('Untuk font di luar Google Fonts (Adobe Fonts / self-host): tempel link stylesheet-nya.')
-                        ->columnSpan(2),
-                ])->columns(3),
+                        ->content(function (?Theme $record) {
+                            $base = 'Kosongkan = memakai bawaan tema (tokens.js di frontend). Isi hanya kalau mau menimpa TAMPILAN DASAR tema ini.';
+                            if (! $record) {
+                                return $base;
+                            }
+                            $childCount = $record->children()->whereNotNull('invitation_id')->count();
+                            if ($childCount === 0) {
+                                return $base;
+                            }
+
+                            return new \Illuminate\Support\HtmlString($base . " <strong style=\"color:#b45309\">Perhatian:</strong> tema ini dipakai {$childCount} undangan yang SUDAH punya kustomisasi tampilan sendiri — warna yang diubah di sini TIDAK akan terlihat di undangan itu (kustomisasi undangan selalu menang). Untuk mengubah tampilan SATU undangan tertentu, buka undangannya lalu klik tombol \"Edit Tampilan\".");
+                        }),
+                ], ThemeOptionsSchema::colorFields('default_options'), ThemeOptionsSchema::typographyFields('default_options')))->columns(3),
 
                 Forms\Components\Tabs\Tab::make('Ornamen & Latar')->schema([
                     Forms\Components\Placeholder::make('info_cover')
@@ -112,85 +113,37 @@ class ThemeResource extends Resource
                         ->helperText('Nonaktif: tiap section tampil layar penuh tanpa kartu.'),
                 ])->columns(3),
 
-                Forms\Components\Tabs\Tab::make('Countdown & Kartu')->schema([
+                Forms\Components\Tabs\Tab::make('Countdown & Kartu')->schema(array_merge([
                     Forms\Components\Select::make('default_options.countdown.style')
                         ->label('Gaya angka countdown')
-                        ->options([
-                            'circle'  => '1. Bulat (default)',
-                            'boxed'   => '2. Kotak berbingkai',
-                            'minimal' => '3. Minimal — titik dua',
-                            'pill'    => '4. Pil memanjang',
-                            'flip'    => '5. Flip clock',
-                        ])->placeholder('Bulat (default)'),
+                        ->options(ThemeOptionsSchema::COUNTDOWN_STYLES)
+                        ->placeholder('Bulat (default)'),
                     Forms\Components\Select::make('default_options.countdown.layout')
                         ->label('Isi section countdown')
-                        ->options([
-                            'simple' => '1. Sederhana',
-                            'photo'  => '2. Foto + nama pasangan',
-                            'date'   => '3. Tanggal besar',
-                            'quote'  => '4. Kutipan pembuka',
-                        ])->placeholder('Sederhana'),
+                        ->options(ThemeOptionsSchema::COUNTDOWN_LAYOUTS)
+                        ->placeholder('Sederhana'),
                     Forms\Components\Select::make('default_options.animation.preset')
                         ->label('Preset animasi scroll')
-                        ->options([
-                            'fade-up'    => 'Muncul dari bawah (default)',
-                            'fade-down'  => 'Muncul dari atas',
-                            'fade-left'  => 'Geser dari kanan',
-                            'fade-right' => 'Geser dari kiri',
-                            'zoom'       => 'Zoom lembut',
-                            'none'       => 'Tanpa animasi',
-                        ])->placeholder('Muncul dari bawah (default)'),
+                        ->options(ThemeOptionsSchema::ANIMATION_PRESETS)
+                        ->placeholder('Muncul dari bawah (default)'),
                     Forms\Components\Select::make('default_options.layout.hero_card')
                         ->label('Kartu untuk HERO')
-                        ->options([
-                            'inherit' => 'Ikut pengaturan konten',
-                            'card'    => 'Selalu pakai kartu',
-                            'plain'   => 'Tanpa kartu (full)',
-                        ])->placeholder('Ikut pengaturan konten'),
+                        ->options(ThemeOptionsSchema::HERO_CARD_MODES)
+                        ->placeholder('Ikut pengaturan konten'),
                     Forms\Components\Select::make('default_options.layout.section_height')
                         ->label('Tinggi section')
-                        ->options([
-                            'full'  => 'Satu layar penuh (default)',
-                            'auto'  => 'Setinggi konten (tanpa gap)',
-                            'smart' => 'Otomatis: penuh jika ada background',
-                        ])->placeholder('Satu layar penuh (default)'),
-                    Forms\Components\Select::make('default_options.card.style')
-                        ->label('Gaya kartu')
-                        ->options([
-                            'default'  => '1. Bawaan tema',
-                            'glass'    => '2. Glass — kaca buram (blur)',
-                            'outline'  => '3. Outline — garis tepi',
-                            'flat'     => '4. Flat — tanpa shadow',
-                            'gradient' => '5. Gradient — gradasi lembut',
-                            'stamp'    => '6. Stamp — tepi perangko',
-                        ])->placeholder('Bawaan tema'),
-                    Forms\Components\ColorPicker::make('default_options.card.bg')->label('Warna kartu'),
-                    Forms\Components\TextInput::make('default_options.card.opacity')->label('Opacity kartu (%)')
-                        ->numeric()->minValue(0)->maxValue(100)->placeholder('100'),
-                    Forms\Components\TextInput::make('default_options.card.radius')->label('Radius kartu (px)')
-                        ->numeric()->minValue(0)->maxValue(80)->placeholder('28'),
-                    Forms\Components\ColorPicker::make('default_options.card.shadow_color')->label('Warna shadow'),
-                    Forms\Components\Select::make('default_options.card.shadow_size')->label('Ketebalan shadow')
-                        ->options([
-                            'none'   => 'Tanpa shadow',
-                            'lembut' => 'Lembut',
-                            'sedang' => 'Sedang (default)',
-                            'kuat'   => 'Kuat',
-                        ])->placeholder('Sedang (default)'),
-                ])->columns(3),
+                        ->options(ThemeOptionsSchema::SECTION_HEIGHTS)
+                        ->placeholder('Satu layar penuh (default)'),
+                ], ThemeOptionsSchema::cardFields('default_options', ThemeOptionsSchema::CARD_STYLES)))->columns(3),
 
-                Forms\Components\Tabs\Tab::make('Label Teks')->schema([
-                    Forms\Components\TextInput::make('default_options.labels.btn_open')->label('Tombol buka')->placeholder('Buka Undangan'),
-                    Forms\Components\TextInput::make('default_options.labels.btn_rsvp')->label('Tombol RSVP')->placeholder('Kirim Konfirmasi'),
-                    Forms\Components\TextInput::make('default_options.labels.title_events')->placeholder('Rangkaian Acara'),
-                    Forms\Components\TextInput::make('default_options.labels.title_co_host')->placeholder('Turut Mengundang'),
-                    Forms\Components\TextInput::make('default_options.labels.title_story')->placeholder('Kisah Kami'),
-                    Forms\Components\TextInput::make('default_options.labels.title_gallery')->placeholder('Galeri'),
-                    Forms\Components\TextInput::make('default_options.labels.title_video')->placeholder('Video'),
-                    Forms\Components\TextInput::make('default_options.labels.title_rsvp')->placeholder('Konfirmasi Kehadiran'),
-                    Forms\Components\TextInput::make('default_options.labels.title_guestbook')->placeholder('Ucapan & Doa'),
-                    Forms\Components\TextInput::make('default_options.labels.title_gift')->placeholder('Kirim Hadiah'),
-                ])->columns(2),
+                Forms\Components\Tabs\Tab::make('Label Teks')
+                    ->schema(ThemeOptionsSchema::labelFields('default_options'))->columns(2),
+
+                Forms\Components\Tabs\Tab::make('Section Aktif')->schema(array_merge([
+                    Forms\Components\Placeholder::make('info_sections')
+                        ->label('')
+                        ->content('Section mana yang aktif SECARA DEFAULT untuk tema ini. Tiap undangan bisa menimpanya sendiri-sendiri lewat checklist "Section Aktif" di form Undangan.'),
+                ], ThemeOptionsSchema::sectionVisibilityFields('default_options')))->columns(3),
 
             ])->columnSpanFull(),
         ]);

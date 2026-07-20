@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Modules\Invitation\Models\Invitation;
 use App\Modules\Invitation\Models\Theme;
+use App\Modules\Invitation\Support\InvitationThemeProvisioner;
 use App\Core\Services\PlanLimitService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -13,14 +14,17 @@ use Illuminate\Validation\Rule;
 class InvitationController extends Controller
 {
     use AuthorizesRequests;
-    public function __construct(private PlanLimitService $limits) {}
+    public function __construct(
+        private PlanLimitService $limits,
+        private InvitationThemeProvisioner $themeProvisioner,
+    ) {}
 
-    /** Daftar tema yang boleh dipakai tenant (sesuai tier paket) — untuk dropdown Edit Undangan. */
+    /** Daftar tema DASAR (bukan child theme privat) yang boleh dipakai tenant — untuk dropdown Edit Undangan. */
     public function themes(Request $request)
     {
         $tenant = $request->user()->tenants()->first();
 
-        return Theme::query()->get(['id', 'name', 'tier'])
+        return Theme::query()->whereNull('invitation_id')->get(['id', 'name', 'tier'])
             ->filter(fn ($t) => $this->limits->canUseTheme($tenant, $t->tier))
             ->values();
     }
@@ -53,19 +57,22 @@ class InvitationController extends Controller
             'opening_text' => ['nullable', 'string'],
         ]);
 
-        $theme = Theme::findOrFail($data['theme_id']);
-        abort_unless($this->limits->canUseTheme($tenant, $theme->tier), 402,
-            "Tema {$theme->name} hanya tersedia di paket {$theme->tier}.");
+        $baseTheme = Theme::whereNull('invitation_id')->findOrFail($data['theme_id']);
+        abort_unless($this->limits->canUseTheme($tenant, $baseTheme->tier), 402,
+            "Tema {$baseTheme->name} hanya tersedia di paket {$baseTheme->tier}.");
 
-        // FIX BUG: dulu default_options tema DISALIN (snapshot) ke undangan,
-        // membuat semua perubahan Tema di Filament tidak pernah berefek karena
-        // key snapshot selalu menang saat merge. Kini theme_options mulai
-        // kosong; merge live dilakukan PublicInvitationController saat render.
-        $invitation = Invitation::create($data + ['theme_options' => []]);
+        // FIX BUG lama: dulu default_options tema DISALIN (snapshot) ke undangan,
+        // membuat semua perubahan Tema di Filament tidak pernah berefek. Sekarang
+        // undangan dapat CHILD THEME sendiri (invitation_id terisi, parent_id =
+        // tema dasar) — semua pengaturan visual hidup di sana, digabung live
+        // lewat ancestryChain() saat render (PublicInvitationController).
+        $invitation = Invitation::create(collect($data)->except('theme_id')->all());
+        $childTheme = $this->themeProvisioner->provision($invitation, $baseTheme);
+        $invitation->update(['theme_id' => $childTheme->id]);
 
         activity()->performedOn($invitation)->log('invitation.created');
 
-        return response()->json($invitation, 201);
+        return response()->json($invitation->fresh('theme'), 201);
     }
 
     public function show(Invitation $invitation)
@@ -101,11 +108,15 @@ class InvitationController extends Controller
             $data['published_at'] = now();
         }
 
-        // Ganti tema = plug & play: data tidak berubah, hanya skin
+        // Ganti tema DASAR = plug & play: data & kustomisasi visual tidak hilang,
+        // cuma "skin". Re-parent child theme yang sudah ada (bukan replace
+        // invitation.theme_id) — child theme TETAP sama, cuma parent_id-nya ganti.
         if (isset($data['theme_id'])) {
-            $theme = Theme::findOrFail($data['theme_id']);
-            abort_unless($this->limits->canUseTheme(tenant(), $theme->tier), 402,
-                "Tema {$theme->name} butuh paket {$theme->tier}.");
+            $newBaseTheme = Theme::whereNull('invitation_id')->findOrFail($data['theme_id']);
+            abort_unless($this->limits->canUseTheme(tenant(), $newBaseTheme->tier), 402,
+                "Tema {$newBaseTheme->name} butuh paket {$newBaseTheme->tier}.");
+
+            $data['theme_id'] = $this->themeProvisioner->resolveOnBaseThemeChange($invitation, $newBaseTheme);
         }
 
         $invitation->update($data);

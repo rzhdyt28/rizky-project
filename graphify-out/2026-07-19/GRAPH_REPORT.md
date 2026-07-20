@@ -1,12 +1,12 @@
 # Graph Report - rizky-project  (2026-07-19)
 
 ## Corpus Check
-- 186 files · ~42,382 words
+- 186 files · ~42,452 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 767 nodes · 1229 edges · 104 communities (77 shown, 27 thin omitted)
-- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 40 edges (avg confidence: 0.8)
+- 768 nodes · 1232 edges · 109 communities (78 shown, 31 thin omitted)
+- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 41 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
@@ -79,6 +79,11 @@
 - extraction-spec.md
 - cleanup-old-project.md
 - BOOTSTRAP-REGISTRATION.md
+- MildnessThemes.php
+- GuestController
+- ThemeResource.php
+- .run
+- autoload-dev
 
 ## God Nodes (most connected - your core abstractions)
 1. `Invitation` - 67 edges
@@ -86,11 +91,11 @@
 3. `User` - 21 edges
 4. `PlanLimitService` - 20 edges
 5. `Plan` - 12 edges
-6. `What You Must Do When Invoked` - 12 edges
-7. `Payment` - 11 edges
-8. `InvitationController` - 11 edges
+6. `InvitationController` - 12 edges
+7. `What You Must Do When Invoked` - 12 edges
+8. `Payment` - 11 edges
 9. `GalleryPhoto` - 11 edges
-10. `require` - 11 edges
+10. `Theme` - 11 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `GalleryPhotoController` --references--> `PlanLimitService`  [EXTRACTED]
@@ -107,15 +112,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (104 total, 27 thin omitted)
-
-### Community 0 - "Invitation"
-Cohesion: 0.13
-Nodes (3): GuestController, Guest, Invitation
+## Communities (109 total, 31 thin omitted)
 
 ### Community 1 - "User"
-Cohesion: 0.12
-Nodes (14): LogOptions, User, LogOptions, InvitationPolicy, Attribute, InvitationDemoSeeder, Illuminate\Database\Eloquent\Casts\Attribute, Illuminate\Foundation\Auth\User (+6 more)
+Cohesion: 0.13
+Nodes (12): LogOptions, User, LogOptions, InvitationPolicy, Attribute, Illuminate\Database\Eloquent\Casts\Attribute, Illuminate\Foundation\Auth\User, Illuminate\Notifications\Notifiable (+4 more)
 
 ### Community 2 - "Filament\Resources\Pages\EditRecord"
 Cohesion: 0.08
@@ -124,10 +125,6 @@ Nodes (12): EditContactMessage, EditInvitation, EditPlan, EditPortfolioEducation
 ### Community 3 - "Filament\Resources\Pages\ListRecords"
 Cohesion: 0.08
 Nodes (12): ListContactMessages, ListInvitations, ListPlans, ListPortfolioEducation, ListPortfolioExperiencePhotos, ListPortfolioExperiences, ListPortfolioProfiles, ListPortfolioSkills (+4 more)
-
-### Community 4 - ".run"
-Cohesion: 0.23
-Nodes (3): EventController, InvitationEvent, MildnessThemes
 
 ### Community 5 - "Illuminate\Database\Eloquent\Model"
 Cohesion: 0.05
@@ -138,8 +135,8 @@ Cohesion: 0.17
 Nodes (8): EventsRelationManager, GalleryPhotosRelationManager, GiftsRelationManager, RsvpsRelationManager, StoriesRelationManager, Filament\Forms\Form, Filament\Resources\RelationManagers\RelationManager, Filament\Tables\Table
 
 ### Community 7 - "Subscription"
-Cohesion: 0.06
-Nodes (15): CheckoutController, Coupon, Plan, Subscription, Tenant, MidtransService, PlanLimitService, DatabaseSeeder (+7 more)
+Cohesion: 0.19
+Nodes (6): Tenant, PlanLimitService, Stancl\Tenancy\Contracts\TenantWithDatabase, Stancl\Tenancy\Database\Concerns\HasDatabase, Stancl\Tenancy\Database\Concerns\HasDomains, Stancl\Tenancy\Database\Models\Tenant
 
 ### Community 8 - "Tenant"
 Cohesion: 0.07
@@ -157,17 +154,13 @@ Nodes (4): AppServiceProvider, ModuleServiceProvider, TenancyServiceProvider, Il
 Cohesion: 0.12
 Nodes (16): scripts, dev, post-autoload-dump, post-create-project-cmd, post-root-package-install, post-update-cmd, Composer\\Config::disableProcessTimeout, Illuminate\\Foundation\\ComposerScripts::postAutoloadDump (+8 more)
 
-### Community 13 - "JobApplication"
-Cohesion: 0.24
-Nodes (3): PublicInvitationController, RsvpController, Illuminate\Routing\Controller
-
 ### Community 14 - "Filament\Resources\Resource"
 Cohesion: 0.18
-Nodes (4): CreatePlan, PlanResource, ThemeResource, Filament\Resources\Resource
+Nodes (4): ContactMessageResource, CreatePlan, PlanResource, Filament\Resources\Resource
 
 ### Community 15 - "Filament\Resources\Pages\CreateRecord"
-Cohesion: 0.20
-Nodes (6): CreateContactMessage, CreateInvitation, CreatePortfolioProfile, CreateThemeAsset, CreateTheme, Filament\Resources\Pages\CreateRecord
+Cohesion: 0.25
+Nodes (5): CreateContactMessage, CreateInvitation, CreatePortfolioProfile, CreateSubscription, Filament\Resources\Pages\CreateRecord
 
 ### Community 17 - "require"
 Cohesion: 0.18
@@ -190,8 +183,8 @@ Cohesion: 0.28
 Nodes (3): CreateTenantUserImpersonationTokensTable, AddBatchUuidColumnToActivityLogTable, Illuminate\Database\Migrations\Migration
 
 ### Community 24 - "composer.json"
-Cohesion: 0.18
-Nodes (10): autoload-dev, psr-4, description, license, minimum-stability, name, prefer-stable, Tests\\ (+2 more)
+Cohesion: 0.25
+Nodes (7): description, license, minimum-stability, name, prefer-stable, $schema, type
 
 ### Community 29 - "config"
 Cohesion: 0.29
@@ -214,12 +207,16 @@ Cohesion: 0.67
 Nodes (3): keywords, framework, laravel
 
 ### Community 84 - "ExperiencePhoto"
-Cohesion: 0.27
-Nodes (3): GuestbookController, GuestbookEntry, Illuminate\Foundation\Auth\Access\AuthorizesRequests
+Cohesion: 0.20
+Nodes (4): GuestbookController, GuestbookEntry, InvitationDemoSeeder, Seeder
 
 ### Community 85 - "Langkah membuat modul baru (contoh: modul "Toko")"
 Cohesion: 0.20
 Nodes (9): 1. Copy folder ini, 2. Isi tiap folder — apa yang ditaruh di mana, 3. Minimal yang harus dibuat, 4. Jalankan migrate, 5. (Opsional) Tambahan yang sering diperlukan, 6. Frontend-nya (repo rizky-project-web), Checklist sebelum dianggap selesai, Langkah membuat modul baru (contoh: modul "Toko") (+1 more)
+
+### Community 86 - "Illuminate\Http\Request"
+Cohesion: 0.24
+Nodes (3): AuthController, PublicInvitationController, Illuminate\Http\Request
 
 ### Community 87 - "graphify reference: extra exports and benchmark"
 Cohesion: 0.22
@@ -236,6 +233,10 @@ Nodes (5): For /graphify explain, For /graphify path, graphify reference: query,
 ### Community 90 - "Menghubungkan Vue Terpisah ke API (CORS + Sanctum)"
 Cohesion: 0.33
 Nodes (5): Alur auth dari Vue, Catatan custom domain pelanggan (Pola C), Menghubungkan Vue Terpisah ke API (CORS + Sanctum), Saat development (paling sering dipakai), Saat produksi (domain berbeda: rizky.com -> api.rizky.com)
+
+### Community 91 - "ContactMessageResource"
+Cohesion: 0.16
+Nodes (4): CheckoutController, Coupon, Plan, MidtransService
 
 ### Community 93 - "CLAUDE.md"
 Cohesion: 0.50
@@ -257,25 +258,33 @@ Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphif
 Cohesion: 0.50
 Nodes (3): Cek akhir, Deploy Semua di Satu VPS (API + Filament + Vue static), Ringkasan langkah (detail teknis identik pola sebelumnya)
 
+### Community 104 - "MildnessThemes.php"
+Cohesion: 0.19
+Nodes (5): DatabaseSeeder, MildnessThemes, PlanFeatureSeeder, ThemeAssetSeeder, Illuminate\Database\Seeder
+
+### Community 108 - "autoload-dev"
+Cohesion: 0.67
+Nodes (3): autoload-dev, psr-4, Tests\\
+
 ## Knowledge Gaps
 - **138 isolated node(s):** `Controller`, `$schema`, `name`, `type`, `description` (+133 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **27 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **31 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Invitation` connect `Invitation` to `User`, `.run`, `Illuminate\Database\Eloquent\Model`, `Subscription`, `Payment`, `JobApplication`, `ThemeResource.php`, `autoload-dev`, `ExperiencePhoto`, `UserFactory`?**
+- **Why does `Invitation` connect `Invitation` to `User`, `.run`, `Illuminate\Database\Eloquent\Model`, `MildnessThemes.php`, `GuestController`, `Payment`, `.run`, `JobApplication`, `ThemeResource.php`, `autoload-dev`, `ExperiencePhoto`, `Illuminate\Http\Request`, `UserFactory`?**
   _High betweenness centrality (0.078) - this node is a cross-community bridge._
-- **Why does `Tenant` connect `Subscription` to `Illuminate\Database\Eloquent\Model`, `Illuminate\Http\Request`?**
+- **Why does `Tenant` connect `Subscription` to `Illuminate\Database\Eloquent\Model`, `MildnessThemes.php`, `.run`, `Illuminate\Http\Request`, `ContactMessageResource`?**
   _High betweenness centrality (0.018) - this node is a cross-community bridge._
-- **Why does `Plan` connect `Subscription` to `SubscriptionResource`, `Illuminate\Database\Eloquent\Model`?**
+- **Why does `Plan` connect `ContactMessageResource` to `SubscriptionResource`, `Illuminate\Database\Eloquent\Model`, `Subscription`, `MildnessThemes.php`, `.run`?**
   _High betweenness centrality (0.015) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `Invitation` (e.g. with `.getStats()` and `.run()`) actually correct?**
   _`Invitation` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `Controller`, `$schema`, `name` to the rest of the system?**
   _138 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Invitation` be split into smaller, more focused modules?**
-  _Cohesion score 0.12631578947368421 - nodes in this community are weakly interconnected._
 - **Should `User` be split into smaller, more focused modules?**
-  _Cohesion score 0.11692307692307692 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.13438735177865613 - nodes in this community are weakly interconnected._
+- **Should `Filament\Resources\Pages\EditRecord` be split into smaller, more focused modules?**
+  _Cohesion score 0.0784313725490196 - nodes in this community are weakly interconnected._
