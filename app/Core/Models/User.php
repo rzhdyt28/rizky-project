@@ -15,6 +15,7 @@ class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, Notifiable, HasRoles, LogsActivity;
 
+    protected $connection = 'undangan';
     protected $guard_name = 'web';
     protected $fillable = ['name', 'email', 'password'];
     protected $hidden = ['password', 'remember_token'];

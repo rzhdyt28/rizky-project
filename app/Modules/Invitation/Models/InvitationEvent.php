@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InvitationEvent extends Model
 {
+    protected $connection = 'undangan';
     protected $guarded = [];
 
     protected $casts = [

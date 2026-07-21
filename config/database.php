@@ -119,6 +119,41 @@ return [
             'foreign_key_constraints' => false,
         ],
 
+        /*
+         * Database per-project. Tiap produk independen (Undangan, Portfolio,
+         * dan project baru nanti) punya database sendiri di server MySQL yang
+         * sama — lihat app/Modules/_template/README.md bagian "Project baru
+         * yang independen" untuk cara menambah connection serupa.
+         */
+        'undangan' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_UNDANGAN_DATABASE', 'db_undangan'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+        ],
+
+        'portfolio' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_PORTFOLIO_DATABASE', 'db_portfolio'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+        ],
 
     ],
 

@@ -106,14 +106,9 @@
   "104": "CustomerResource.php",
   "105": "ManagesInvitationChildren.php",
   "106": "InvitationController.php",
-  "107": "PortfolioExperiencePhotoResource.php",
-  "108": "UserFactory",
-  "109": "EventController",
-  "110": "Subscription",
-  "111": "InvitationResource",
-  "112": "SubscriptionResource",
-  "113": "ExperiencePhoto",
-  "114": "AddBatchUuidColumnToActivityLogTable",
-  "115": "2026_07_20_164911_add_invitation_id_to_themes_table.php",
-  "116": ".getTitle"
+  "107": "GiftController",
+  "108": "PublicInvitationController.php",
+  "109": "EnsureSubscriptionActive.php",
+  "110": "AddBatchUuidColumnToActivityLogTable",
+  "115": "2026_07_20_164911_add_invitation_id_to_themes_table.php"
 }

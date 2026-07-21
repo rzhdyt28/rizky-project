@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subscription extends Model
 {
+    protected $connection = 'undangan';
     protected $guarded = [];
     protected $casts = ['starts_at' => 'datetime', 'ends_at' => 'datetime'];
 

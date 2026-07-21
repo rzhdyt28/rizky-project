@@ -11,6 +11,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 {
     use HasDatabase, HasDomains;
 
+    protected $connection = 'undangan';
     protected $fillable = ['id', 'name', 'owner_user_id'];
 
     public static function getCustomColumns(): array

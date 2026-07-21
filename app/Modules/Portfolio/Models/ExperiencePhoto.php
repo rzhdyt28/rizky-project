@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExperiencePhoto extends Model
 {
+    protected $connection = 'portfolio';
     protected $table = 'portfolio_experience_photos';
 
     protected $fillable = [

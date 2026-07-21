@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ThemeAsset extends Model
 {
+    protected $connection = 'undangan';
     protected $guarded = [];
 
     protected $casts = ['is_active' => 'bool'];

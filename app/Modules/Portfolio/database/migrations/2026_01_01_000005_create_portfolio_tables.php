@@ -5,12 +5,16 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
+    // Modul Portofolio — database sendiri (connection 'portfolio', lihat
+    // config/database.php + app/Modules/_template/README.md). Bukan data
+    // per-pelanggan (1 pemilik), jadi TIDAK pakai tenant_id/BelongsToTenant.
+    protected $connection = 'portfolio';
+
     // Modul Portofolio — bilingual (kolom JSON {id: "...", en: "..."}) meniru struktur rzhdyt28.github.io
     public function up(): void
     {
         Schema::create('portfolio_profiles', function (Blueprint $table) {
             $table->id();
-            $table->string('tenant_id');
             $table->string('full_name');
             $table->json('headline');                       // {"id": "...", "en": "..."}
             $table->json('about');
@@ -19,23 +23,19 @@ return new class extends Migration {
             $table->string('cv_path')->nullable();
             $table->json('socials')->nullable();            // {email, whatsapp, linkedin, github}
             $table->timestamps();
-            $table->foreign('tenant_id')->references('id')->on('tenants')->cascadeOnDelete();
         });
 
         Schema::create('portfolio_skills', function (Blueprint $table) {
             $table->id();
-            $table->string('tenant_id');
             $table->string('category');                     // ~/it-support, ~/networking, ...
             $table->json('title');
             $table->json('description');
             $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
-            $table->foreign('tenant_id')->references('id')->on('tenants')->cascadeOnDelete();
         });
 
         Schema::create('portfolio_experiences', function (Blueprint $table) {
             $table->id();
-            $table->string('tenant_id');
             $table->string('company');
             $table->json('role');
             $table->string('location')->nullable();
@@ -44,12 +44,10 @@ return new class extends Migration {
             $table->json('bullets');                        // [{id: "...", en: "..."}, ...]
             $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
-            $table->foreign('tenant_id')->references('id')->on('tenants')->cascadeOnDelete();
         });
 
         Schema::create('portfolio_educations', function (Blueprint $table) {
             $table->id();
-            $table->string('tenant_id');
             $table->json('degree');
             $table->string('institution');
             $table->string('period')->nullable();
@@ -57,18 +55,15 @@ return new class extends Migration {
             $table->enum('kind', ['education', 'certification'])->default('education');
             $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
-            $table->foreign('tenant_id')->references('id')->on('tenants')->cascadeOnDelete();
         });
 
         Schema::create('portfolio_contact_messages', function (Blueprint $table) {
             $table->id();
-            $table->string('tenant_id');
             $table->string('sender_name');
             $table->string('sender_email');
             $table->text('message');
             $table->boolean('is_read')->default(false);
             $table->timestamps();
-            $table->foreign('tenant_id')->references('id')->on('tenants')->cascadeOnDelete();
         });
     }
 

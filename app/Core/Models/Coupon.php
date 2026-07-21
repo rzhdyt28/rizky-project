@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Coupon extends Model
 {
+    protected $connection = 'undangan';
     protected $guarded = [];
     protected $casts = ['expires_at' => 'datetime', 'is_active' => 'bool'];
 

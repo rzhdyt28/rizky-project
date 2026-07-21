@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LoveStory extends Model
 {
+    protected $connection = 'undangan';
     protected $guarded = [];
 
     public function invitation()

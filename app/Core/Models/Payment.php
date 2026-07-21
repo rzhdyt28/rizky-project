@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
+    protected $connection = 'undangan';
     protected $guarded = [];
     protected $casts = ['gateway_payload' => 'array'];
 

@@ -7,6 +7,7 @@ use SoftDeletes;
 
 class Plan extends Model
 {
+    protected $connection = 'undangan';
     protected $guarded = [];
     protected $casts = ['custom_domain' => 'bool', 'remove_branding' => 'bool', 'music_enabled' => 'bool', 'is_active' => 'bool'];
 }

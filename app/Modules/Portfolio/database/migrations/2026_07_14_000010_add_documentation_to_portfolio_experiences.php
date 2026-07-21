@@ -15,6 +15,8 @@ return new class extends Migration
      * Tabel baru portfolio_experience_photos menampung galeri foto
      * dokumentasi per pengalaman kerja (dulunya hardcode di portofolio.html).
      */
+    protected $connection = 'portfolio';
+
     public function up(): void
     {
         Schema::table('portfolio_experiences', function (Blueprint $table) {

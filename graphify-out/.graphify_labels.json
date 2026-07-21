@@ -83,7 +83,6 @@
   "81": "tenant.php",
   "82": "web.php",
   "83": "vite.config.js",
-  "84": "InvitationLookResource",
   "85": "Langkah membuat modul baru (contoh: modul \"Toko\")",
   "86": "GalleryPhotoController",
   "87": "graphify reference: extra exports and benchmark",
@@ -91,7 +90,6 @@
   "89": "graphify reference: query, path, explain",
   "90": "Menghubungkan Vue Terpisah ke API (CORS + Sanctum)",
   "91": "ContactMessageResource",
-  "92": "EnsureSubscriptionActive.php",
   "93": "CLAUDE.md",
   "94": "graphify reference: add a URL and watch a folder",
   "95": "graphify reference: commit hook and native CLAUDE.md integration",
@@ -103,11 +101,6 @@
   "101": "extraction-spec.md",
   "102": "cleanup-old-project.md",
   "103": "BOOTSTRAP-REGISTRATION.md",
-  "104": "CustomerResource.php",
-  "105": "ManagesInvitationChildren.php",
-  "106": "InvitationController.php",
-  "109": "EventController",
-  "113": "ExperiencePhoto",
-  "114": "AddBatchUuidColumnToActivityLogTable",
+  "110": "AddBatchUuidColumnToActivityLogTable",
   "115": "2026_07_20_164911_add_invitation_id_to_themes_table.php"
 }

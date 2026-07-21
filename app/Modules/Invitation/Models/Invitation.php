@@ -12,6 +12,7 @@ class Invitation extends Model
 {
     use BelongsToTenant, LogsActivity;
 
+    protected $connection = 'undangan';
     protected $guarded = [];
 
     protected $casts = [
