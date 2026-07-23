@@ -29,20 +29,30 @@ class ThemeOptionsSchema
         'button'          => 'Tombol "Buka Undangan"',
     ];
 
-    /** Datalist font dipakai bersama tiap field font per-elemen (v5). */
-    public const ELEMENT_FONTS = [
-        'Cormorant Garamond', 'Playfair Display', 'Cinzel', 'Lora', 'EB Garamond', 'Marcellus',
-        'Great Vibes', 'Dancing Script', 'Parisienne', 'Allura', 'Sacramento', 'Alex Brush',
-        'Jost', 'Poppins', 'Lato', 'Open Sans', 'Nunito', 'Inter', 'Mulish',
+    /**
+     * KATEGORI FONT GLOBAL (v6) -- satu-satunya sumber font sungguhan ada di
+     * 4 field ini (typographyFields(): Judul/Isi/Kaligrafi/Aksen). Elemen
+     * PER-KEY (eyebrow, label, nama acara, dst) TIDAK LAGI boleh isi nama
+     * font bebas sendiri -- cuma boleh "nunut" ke salah satu dari 4 kategori
+     * ini (elementFontField() di bawah), supaya ganti 1 font global otomatis
+     * konsisten ke semua elemen yang memakainya. Value tersimpan = key
+     * kategori ('heading'/'body'/'script'/'accent'), BUKAN nama font.
+     */
+    public const FONT_CATEGORIES = [
+        'heading' => 'Ikut Font Judul Section',
+        'body'    => 'Ikut Font Teks Isi',
+        'script'  => 'Ikut Font Kaligrafi',
+        'accent'  => 'Ikut Font Aksen',
     ];
 
-    /** Satu field Tipografi (font) untuk 1 elemen -- dipakai heroElementStyleFields() & sectionElementStyleFields(). */
-    protected static function elementFontField(string $formPath, string $label): Forms\Components\TextInput
+    /** Satu field pilihan KATEGORI font untuk 1 elemen -- dipakai heroElementStyleFields() & sectionElementStyleFields(). */
+    protected static function elementFontField(string $formPath, string $label): Forms\Components\Select
     {
-        return Forms\Components\TextInput::make($formPath)
+        return Forms\Components\Select::make($formPath)
             ->label("Font — $label")
-            ->placeholder('Bawaan')
-            ->datalist(self::ELEMENT_FONTS);
+            ->options(self::FONT_CATEGORIES)
+            ->placeholder('Bawaan (ikut gaya elemen)')
+            ->native(false);
     }
 
     /**
@@ -91,12 +101,17 @@ class ThemeOptionsSchema
 
     /** Satu sumber pilihan gaya kartu — dipakai ThemeResource & InvitationResource. */
     public const CARD_STYLES = [
-        'default'  => 'Bawaan tema',
-        'glass'    => 'Glass — kaca buram (blur)',
-        'outline'  => 'Outline — garis tepi, tanpa isi',
-        'flat'     => 'Flat — polos tanpa shadow',
-        'gradient' => 'Gradient — gradasi lembut',
-        'stamp'    => 'Stamp — tepi perangko',
+        'default'    => 'Bawaan tema',
+        'glass'      => 'Glass — kaca buram (blur)',
+        'outline'    => 'Outline — garis tepi, tanpa isi',
+        'flat'       => 'Flat — polos tanpa shadow',
+        'gradient'   => 'Gradient — gradasi lembut',
+        'stamp'      => 'Stamp — tepi perangko',
+        'java'       => 'Java — border ganda emas-cokelat bermotif',
+        'brutalist'  => 'Modern — sudut kotak, border tebal, shadow keras',
+        'vintage'    => 'Klasik — bingkai ganda ala pigura foto lama',
+        'line'       => 'Garis Minimalis — cuma garis tipis, tanpa isi',
+        'royal'      => 'Royal — border foil emas, kesan mewah',
     ];
 
     /**
@@ -124,7 +139,7 @@ class ThemeOptionsSchema
         'arch'     => '5. Arch — foto besar berbingkai lengkung di atas nama',
         'monogram' => '6. Monogram — inisial besar di tengah, sangat minimalis',
         'polaroid' => '7. Polaroid — foto gaya polaroid miring, playful',
-        'custom'   => '8. Custom — atur urutan & rata tiap elemen sendiri',
+        'poster'   => '8. Poster — foto latar penuh, nama besar menumpuk di bawah, dramatis',
     ];
 
 
@@ -333,6 +348,10 @@ class ThemeOptionsSchema
                 ->label('Font Kaligrafi (Nama Pasangan)')->placeholder('Bawaan tema')
                 ->helperText('Khusus font gaya tulisan tangan untuk nama pasangan di Hero.')
                 ->datalist(['Great Vibes', 'Dancing Script', 'Parisienne', 'Allura', 'Sacramento', 'Alex Brush']),
+            Forms\Components\TextInput::make("$prefix.fonts.accent")
+                ->label('Font Aksen (Label kecil)')->placeholder('Ikut Font Teks Isi')
+                ->helperText('Dipakai untuk label kecil huruf kapital (mis. "Undangan Pernikahan", "Dress Code", label countdown) -- elemen lain (judul/isi/kaligrafi) TIDAK memakai ini.')
+                ->datalist(['Jost', 'Poppins', 'Lato', 'Open Sans', 'Nunito', 'Inter', 'Mulish']),
             Forms\Components\TextInput::make("$prefix.fonts.css_url")
                 ->label('URL CSS font (non-Google)')->url()
                 ->helperText('Untuk font di luar Google Fonts (Adobe Fonts / self-host): tempel link stylesheet-nya.')

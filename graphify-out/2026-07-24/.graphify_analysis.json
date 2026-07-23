@@ -1,0 +1,1013 @@
+{
+  "communities": {
+    "0": [
+      "app_core_http_controllers_authcontroller",
+      "app_core_http_controllers_authcontroller_authcontroller",
+      "app_core_http_controllers_authcontroller_authcontroller_login",
+      "app_core_http_controllers_authcontroller_authcontroller_logout",
+      "app_core_http_controllers_authcontroller_authcontroller_me",
+      "app_core_http_controllers_authcontroller_authcontroller_register",
+      "app_core_http_middleware_ensuresubscriptionactive",
+      "app_core_http_middleware_ensuresubscriptionactive_ensuresubscriptionactive",
+      "app_core_http_middleware_ensuresubscriptionactive_ensuresubscriptionactive_handle",
+      "app_core_routes",
+      "app_modules_invitation_http_controllers_guestbookcontroller",
+      "app_modules_invitation_http_controllers_guestbookcontroller_guestbookcontroller",
+      "app_modules_invitation_http_controllers_guestbookcontroller_guestbookcontroller_store",
+      "app_modules_invitation_http_controllers_guestcontroller",
+      "app_modules_invitation_http_controllers_guestcontroller_guestcontroller",
+      "app_modules_invitation_http_controllers_guestcontroller_guestcontroller_destroy",
+      "app_modules_invitation_http_controllers_guestcontroller_guestcontroller_index",
+      "app_modules_invitation_http_controllers_guestcontroller_guestcontroller_store",
+      "app_modules_invitation_http_controllers_invitationcontroller",
+      "app_modules_invitation_http_controllers_invitationcontroller_invitationcontroller",
+      "app_modules_invitation_http_controllers_invitationcontroller_invitationcontroller_construct",
+      "app_modules_invitation_http_controllers_invitationcontroller_invitationcontroller_destroy",
+      "app_modules_invitation_http_controllers_invitationcontroller_invitationcontroller_index",
+      "app_modules_invitation_http_controllers_invitationcontroller_invitationcontroller_show",
+      "app_modules_invitation_http_controllers_invitationcontroller_invitationcontroller_store",
+      "app_modules_invitation_http_controllers_invitationcontroller_invitationcontroller_update",
+      "app_modules_invitation_http_controllers_publicinvitationcontroller",
+      "app_modules_invitation_http_controllers_publicinvitationcontroller_publicinvitationcontroller",
+      "app_modules_invitation_http_controllers_publicinvitationcontroller_publicinvitationcontroller_canpreview",
+      "app_modules_invitation_http_controllers_publicinvitationcontroller_publicinvitationcontroller_prune",
+      "app_modules_invitation_http_controllers_publicinvitationcontroller_publicinvitationcontroller_show",
+      "app_modules_invitation_http_controllers_rsvpcontroller",
+      "app_modules_invitation_http_controllers_rsvpcontroller_rsvpcontroller",
+      "app_modules_invitation_http_controllers_rsvpcontroller_rsvpcontroller_index",
+      "app_modules_invitation_http_controllers_rsvpcontroller_rsvpcontroller_store",
+      "app_modules_invitation_models_guest",
+      "app_modules_invitation_models_guest_guest",
+      "app_modules_invitation_models_guest_guest_invitation",
+      "app_modules_invitation_models_invitation_invitation",
+      "app_modules_invitation_models_invitation_invitation_events",
+      "app_modules_invitation_models_invitation_invitation_gifts",
+      "app_modules_invitation_models_invitation_invitation_guestbook",
+      "app_modules_invitation_models_invitation_invitation_guests",
+      "app_modules_invitation_models_invitation_invitation_photos",
+      "app_modules_invitation_models_invitation_invitation_rsvps",
+      "app_modules_invitation_models_invitation_invitation_stories",
+      "app_modules_invitation_models_invitation_invitation_theme",
+      "app_modules_invitation_models_theme",
+      "app_modules_invitation_models_theme_theme",
+      "app_modules_invitation_models_theme_theme_ancestrychain",
+      "app_modules_invitation_models_theme_theme_children",
+      "app_modules_invitation_models_theme_theme_parent",
+      "app_modules_invitation_routes",
+      "closure",
+      "config_auth",
+      "illuminate_foundation_auth_access_authorizesrequests",
+      "illuminate_http_request",
+      "illuminate_routing_controller"
+    ],
+    "1": [
+      "app_core_models_user",
+      "app_core_models_user_php_logoptions",
+      "app_core_models_user_user",
+      "app_core_models_user_user_getactivitylogoptions",
+      "app_core_models_user_user_tenants",
+      "app_modules_invitation_models_invitation",
+      "app_modules_invitation_models_invitation_invitation_cohosts",
+      "app_modules_invitation_models_invitation_invitation_getactivitylogoptions",
+      "app_modules_invitation_models_invitation_php_logoptions",
+      "app_modules_invitation_policies_invitationpolicy",
+      "app_modules_invitation_policies_invitationpolicy_invitationpolicy",
+      "app_modules_invitation_policies_invitationpolicy_invitationpolicy_before",
+      "app_modules_invitation_policies_invitationpolicy_invitationpolicy_delete",
+      "app_modules_invitation_policies_invitationpolicy_invitationpolicy_update",
+      "app_modules_invitation_policies_invitationpolicy_invitationpolicy_view",
+      "attribute",
+      "config_permission",
+      "database_seeders_databaseseeder",
+      "database_seeders_databaseseeder_databaseseeder",
+      "database_seeders_databaseseeder_databaseseeder_run",
+      "database_seeders_planfeatureseeder",
+      "database_seeders_planfeatureseeder_planfeatureseeder",
+      "database_seeders_planfeatureseeder_planfeatureseeder_run",
+      "database_seeders_themeassetseeder",
+      "database_seeders_themeassetseeder_themeassetseeder",
+      "database_seeders_themeassetseeder_themeassetseeder_run",
+      "illuminate_database_eloquent_casts_attribute",
+      "illuminate_database_seeder",
+      "illuminate_foundation_auth_user",
+      "illuminate_notifications_notifiable",
+      "laravel_sanctum_hasapitokens",
+      "spatie_activitylog_logoptions",
+      "spatie_activitylog_traits_logsactivity",
+      "spatie_permission_traits_hasroles"
+    ],
+    "2": [
+      "app_filament_resources_contactmessageresource_pages_editcontactmessage",
+      "app_filament_resources_contactmessageresource_pages_editcontactmessage_editcontactmessage",
+      "app_filament_resources_contactmessageresource_pages_editcontactmessage_editcontactmessage_getheaderactions",
+      "app_filament_resources_invitationresource_pages_editinvitation",
+      "app_filament_resources_invitationresource_pages_editinvitation_editinvitation",
+      "app_filament_resources_invitationresource_pages_editinvitation_editinvitation_getheaderactions",
+      "app_filament_resources_planresource_pages_editplan",
+      "app_filament_resources_planresource_pages_editplan_editplan",
+      "app_filament_resources_planresource_pages_editplan_editplan_getheaderactions",
+      "app_filament_resources_portfolioeducationresource_pages_editportfolioeducation",
+      "app_filament_resources_portfolioeducationresource_pages_editportfolioeducation_editportfolioeducation",
+      "app_filament_resources_portfolioeducationresource_pages_editportfolioeducation_editportfolioeducation_getheaderactions",
+      "app_filament_resources_portfolioexperiencephotoresource_pages_editportfolioexperiencephoto",
+      "app_filament_resources_portfolioexperiencephotoresource_pages_editportfolioexperiencephoto_editportfolioexperiencephoto",
+      "app_filament_resources_portfolioexperiencephotoresource_pages_editportfolioexperiencephoto_editportfolioexperiencephoto_getheaderactions",
+      "app_filament_resources_portfolioexperienceresource_pages_editportfolioexperience",
+      "app_filament_resources_portfolioexperienceresource_pages_editportfolioexperience_editportfolioexperience",
+      "app_filament_resources_portfolioexperienceresource_pages_editportfolioexperience_editportfolioexperience_getheaderactions",
+      "app_filament_resources_portfolioprofileresource_pages_editportfolioprofile",
+      "app_filament_resources_portfolioprofileresource_pages_editportfolioprofile_editportfolioprofile",
+      "app_filament_resources_portfolioprofileresource_pages_editportfolioprofile_editportfolioprofile_getheaderactions",
+      "app_filament_resources_portfolioskillresource_pages_editportfolioskill",
+      "app_filament_resources_portfolioskillresource_pages_editportfolioskill_editportfolioskill",
+      "app_filament_resources_portfolioskillresource_pages_editportfolioskill_editportfolioskill_getheaderactions",
+      "app_filament_resources_subscriptionresource_pages_editsubscription",
+      "app_filament_resources_subscriptionresource_pages_editsubscription_editsubscription",
+      "app_filament_resources_subscriptionresource_pages_editsubscription_editsubscription_getheaderactions",
+      "app_filament_resources_themeassetresource_pages_editthemeasset",
+      "app_filament_resources_themeassetresource_pages_editthemeasset_editthemeasset",
+      "app_filament_resources_themeassetresource_pages_editthemeasset_editthemeasset_getheaderactions",
+      "app_filament_resources_themeresource_pages_edittheme",
+      "app_filament_resources_themeresource_pages_edittheme_edittheme",
+      "app_filament_resources_themeresource_pages_edittheme_edittheme_getheaderactions",
+      "filament_resources_pages_editrecord"
+    ],
+    "3": [
+      "app_filament_resources_contactmessageresource_pages_listcontactmessages",
+      "app_filament_resources_contactmessageresource_pages_listcontactmessages_listcontactmessages",
+      "app_filament_resources_contactmessageresource_pages_listcontactmessages_listcontactmessages_getheaderactions",
+      "app_filament_resources_invitationresource_pages_listinvitations",
+      "app_filament_resources_invitationresource_pages_listinvitations_listinvitations",
+      "app_filament_resources_invitationresource_pages_listinvitations_listinvitations_getheaderactions",
+      "app_filament_resources_planresource_pages_listplans",
+      "app_filament_resources_planresource_pages_listplans_listplans",
+      "app_filament_resources_planresource_pages_listplans_listplans_getheaderactions",
+      "app_filament_resources_portfolioeducationresource_pages_listportfolioeducation",
+      "app_filament_resources_portfolioeducationresource_pages_listportfolioeducation_listportfolioeducation",
+      "app_filament_resources_portfolioeducationresource_pages_listportfolioeducation_listportfolioeducation_getheaderactions",
+      "app_filament_resources_portfolioexperiencephotoresource_pages_listportfolioexperiencephotos",
+      "app_filament_resources_portfolioexperiencephotoresource_pages_listportfolioexperiencephotos_listportfolioexperiencephotos",
+      "app_filament_resources_portfolioexperiencephotoresource_pages_listportfolioexperiencephotos_listportfolioexperiencephotos_getheaderactions",
+      "app_filament_resources_portfolioexperienceresource_pages_listportfolioexperiences",
+      "app_filament_resources_portfolioexperienceresource_pages_listportfolioexperiences_listportfolioexperiences",
+      "app_filament_resources_portfolioexperienceresource_pages_listportfolioexperiences_listportfolioexperiences_getheaderactions",
+      "app_filament_resources_portfolioprofileresource_pages_listportfolioprofiles",
+      "app_filament_resources_portfolioprofileresource_pages_listportfolioprofiles_listportfolioprofiles",
+      "app_filament_resources_portfolioprofileresource_pages_listportfolioprofiles_listportfolioprofiles_getheaderactions",
+      "app_filament_resources_portfolioskillresource_pages_listportfolioskills",
+      "app_filament_resources_portfolioskillresource_pages_listportfolioskills_listportfolioskills",
+      "app_filament_resources_portfolioskillresource_pages_listportfolioskills_listportfolioskills_getheaderactions",
+      "app_filament_resources_subscriptionresource_pages_listsubscriptions",
+      "app_filament_resources_subscriptionresource_pages_listsubscriptions_listsubscriptions",
+      "app_filament_resources_subscriptionresource_pages_listsubscriptions_listsubscriptions_getheaderactions",
+      "app_filament_resources_themeassetresource_pages_listthemeassets",
+      "app_filament_resources_themeassetresource_pages_listthemeassets_listthemeassets",
+      "app_filament_resources_themeassetresource_pages_listthemeassets_listthemeassets_getheaderactions",
+      "app_filament_resources_themeresource_pages_listthemes",
+      "app_filament_resources_themeresource_pages_listthemes_listthemes",
+      "app_filament_resources_themeresource_pages_listthemes_listthemes_getheaderactions",
+      "filament_resources_pages_listrecords"
+    ],
+    "4": [
+      "app_core_models_plan",
+      "app_core_models_plan_plan",
+      "app_core_services_planlimitservice",
+      "app_modules_invitation_models_galleryphoto",
+      "app_modules_invitation_models_galleryphoto_galleryphoto",
+      "app_modules_invitation_models_galleryphoto_galleryphoto_invitation",
+      "app_modules_invitation_models_gift",
+      "app_modules_invitation_models_gift_gift",
+      "app_modules_invitation_models_gift_gift_invitation",
+      "app_modules_invitation_models_guestbookentry",
+      "app_modules_invitation_models_guestbookentry_guestbookentry",
+      "app_modules_invitation_models_guestbookentry_guestbookentry_invitation",
+      "app_modules_invitation_models_invitationevent",
+      "app_modules_invitation_models_invitationevent_invitationevent",
+      "app_modules_invitation_models_invitationevent_invitationevent_invitation",
+      "app_modules_invitation_models_lovestory",
+      "app_modules_invitation_models_lovestory_lovestory",
+      "app_modules_invitation_models_lovestory_lovestory_invitation",
+      "database_seeders_invitationdemoseeder",
+      "database_seeders_invitationdemoseeder_invitationdemoseeder",
+      "database_seeders_invitationdemoseeder_invitationdemoseeder_run",
+      "database_seeders_mildnessthemes",
+      "database_seeders_mildnessthemes_mildnessthemes",
+      "database_seeders_mildnessthemes_mildnessthemes_run",
+      "seeder"
+    ],
+    "5": [
+      "app_core_concerns_belongstotenant",
+      "app_core_concerns_belongstotenant_bootbelongstotenant",
+      "app_core_concerns_belongstotenant_tenant",
+      "app_modules_portfolio_http_controllers_portfoliocontroller",
+      "app_modules_portfolio_http_controllers_portfoliocontroller_portfoliocontroller",
+      "app_modules_portfolio_http_controllers_portfoliocontroller_portfoliocontroller_contact",
+      "app_modules_portfolio_http_controllers_portfoliocontroller_portfoliocontroller_show",
+      "app_modules_portfolio_models_contactmessage",
+      "app_modules_portfolio_models_contactmessage_contactmessage",
+      "app_modules_portfolio_models_education",
+      "app_modules_portfolio_models_education_education",
+      "app_modules_portfolio_models_experience",
+      "app_modules_portfolio_models_experience_experience",
+      "app_modules_portfolio_models_profile",
+      "app_modules_portfolio_models_profile_profile",
+      "app_modules_portfolio_models_skill",
+      "app_modules_portfolio_models_skill_skill",
+      "app_modules_portfolio_routes",
+      "illuminate_database_eloquent_model"
+    ],
+    "6": [
+      "app_filament_resources_invitationresource_relationmanagers_eventsrelationmanager",
+      "app_filament_resources_invitationresource_relationmanagers_eventsrelationmanager_eventsrelationmanager",
+      "app_filament_resources_invitationresource_relationmanagers_eventsrelationmanager_eventsrelationmanager_form",
+      "app_filament_resources_invitationresource_relationmanagers_eventsrelationmanager_eventsrelationmanager_table",
+      "app_filament_resources_invitationresource_relationmanagers_galleryphotosrelationmanager",
+      "app_filament_resources_invitationresource_relationmanagers_galleryphotosrelationmanager_galleryphotosrelationmanager",
+      "app_filament_resources_invitationresource_relationmanagers_galleryphotosrelationmanager_galleryphotosrelationmanager_form",
+      "app_filament_resources_invitationresource_relationmanagers_galleryphotosrelationmanager_galleryphotosrelationmanager_table",
+      "app_filament_resources_invitationresource_relationmanagers_giftsrelationmanager",
+      "app_filament_resources_invitationresource_relationmanagers_giftsrelationmanager_giftsrelationmanager",
+      "app_filament_resources_invitationresource_relationmanagers_giftsrelationmanager_giftsrelationmanager_form",
+      "app_filament_resources_invitationresource_relationmanagers_giftsrelationmanager_giftsrelationmanager_table",
+      "app_filament_resources_invitationresource_relationmanagers_rsvpsrelationmanager",
+      "app_filament_resources_invitationresource_relationmanagers_rsvpsrelationmanager_rsvpsrelationmanager",
+      "app_filament_resources_invitationresource_relationmanagers_rsvpsrelationmanager_rsvpsrelationmanager_isreadonly",
+      "app_filament_resources_invitationresource_relationmanagers_rsvpsrelationmanager_rsvpsrelationmanager_table",
+      "app_filament_resources_invitationresource_relationmanagers_storiesrelationmanager",
+      "app_filament_resources_invitationresource_relationmanagers_storiesrelationmanager_storiesrelationmanager",
+      "app_filament_resources_invitationresource_relationmanagers_storiesrelationmanager_storiesrelationmanager_form",
+      "app_filament_resources_invitationresource_relationmanagers_storiesrelationmanager_storiesrelationmanager_table",
+      "filament_forms_form",
+      "filament_resources_relationmanagers_relationmanager",
+      "filament_tables_table"
+    ],
+    "7": [
+      "app_core_http_controllers_checkoutcontroller",
+      "app_core_http_controllers_checkoutcontroller_checkoutcontroller",
+      "app_core_http_controllers_checkoutcontroller_checkoutcontroller_construct",
+      "app_core_http_controllers_checkoutcontroller_checkoutcontroller_store",
+      "app_core_http_controllers_checkoutcontroller_checkoutcontroller_webhook",
+      "app_core_models_coupon",
+      "app_core_models_coupon_coupon",
+      "app_core_models_coupon_coupon_applyto",
+      "app_core_models_coupon_coupon_isusable",
+      "app_core_models_subscription",
+      "app_core_models_subscription_subscription",
+      "app_core_models_subscription_subscription_isactive",
+      "app_core_models_subscription_subscription_payments",
+      "app_core_models_subscription_subscription_plan",
+      "app_core_models_subscription_subscription_tenant",
+      "app_core_services_midtransservice",
+      "app_core_services_midtransservice_midtransservice",
+      "app_core_services_midtransservice_midtransservice_checkout",
+      "app_core_services_midtransservice_midtransservice_construct"
+    ],
+    "8": [
+      "app_core_models_tenant",
+      "app_core_models_tenant_tenant",
+      "app_core_models_tenant_tenant_activesubscription",
+      "app_core_models_tenant_tenant_getcustomcolumns",
+      "app_core_models_tenant_tenant_invitations",
+      "app_core_models_tenant_tenant_owner",
+      "app_core_models_tenant_tenant_subscriptions",
+      "app_core_services_planlimitservice_planlimitservice",
+      "app_core_services_planlimitservice_planlimitservice_cancreateinvitation",
+      "app_core_services_planlimitservice_planlimitservice_canuploadphoto",
+      "app_core_services_planlimitservice_planlimitservice_canusecustomdomain",
+      "app_core_services_planlimitservice_planlimitservice_canusetheme",
+      "app_core_services_planlimitservice_planlimitservice_defaults",
+      "app_core_services_planlimitservice_planlimitservice_featuresfor",
+      "app_core_services_planlimitservice_planlimitservice_planfor",
+      "stancl_tenancy_contracts_tenantwithdatabase",
+      "stancl_tenancy_database_concerns_hasdatabase",
+      "stancl_tenancy_database_concerns_hasdomains",
+      "stancl_tenancy_database_models_tenant"
+    ],
+    "9": [
+      "axios",
+      "concurrently",
+      "laravel_vite_plugin",
+      "package",
+      "package_devdependencies",
+      "package_devdependencies_axios",
+      "package_devdependencies_concurrently",
+      "package_devdependencies_laravel_vite_plugin",
+      "package_devdependencies_tailwindcss",
+      "package_devdependencies_tailwindcss_vite",
+      "package_devdependencies_vite",
+      "package_private",
+      "package_scripts",
+      "package_scripts_build",
+      "package_scripts_dev",
+      "package_type",
+      "tailwindcss",
+      "tailwindcss_vite",
+      "vite"
+    ],
+    "10": [
+      "app_core_models_payment",
+      "app_core_models_payment_payment",
+      "app_core_models_payment_payment_coupon",
+      "app_core_models_payment_payment_subscription",
+      "app_core_services_midtransservice_midtransservice_handlenotification",
+      "app_filament_widgets_platformstats",
+      "app_filament_widgets_platformstats_platformstats",
+      "app_filament_widgets_platformstats_platformstats_getstats",
+      "app_filament_widgets_revenuechart",
+      "app_filament_widgets_revenuechart_revenuechart",
+      "app_filament_widgets_revenuechart_revenuechart_getdata",
+      "app_filament_widgets_revenuechart_revenuechart_gettype",
+      "app_modules_invitation_models_rsvp",
+      "app_modules_invitation_models_rsvp_rsvp",
+      "app_modules_invitation_models_rsvp_rsvp_invitation",
+      "filament_widgets_chartwidget"
+    ],
+    "11": [
+      "app_providers_appserviceprovider",
+      "app_providers_appserviceprovider_appserviceprovider",
+      "app_providers_appserviceprovider_appserviceprovider_boot",
+      "app_providers_appserviceprovider_appserviceprovider_register",
+      "app_providers_moduleserviceprovider",
+      "app_providers_moduleserviceprovider_moduleserviceprovider",
+      "app_providers_moduleserviceprovider_moduleserviceprovider_boot",
+      "app_providers_tenancyserviceprovider",
+      "app_providers_tenancyserviceprovider_tenancyserviceprovider",
+      "app_providers_tenancyserviceprovider_tenancyserviceprovider_boot",
+      "app_providers_tenancyserviceprovider_tenancyserviceprovider_bootevents",
+      "app_providers_tenancyserviceprovider_tenancyserviceprovider_events",
+      "app_providers_tenancyserviceprovider_tenancyserviceprovider_maketenancymiddlewarehighestpriority",
+      "app_providers_tenancyserviceprovider_tenancyserviceprovider_maproutes",
+      "app_providers_tenancyserviceprovider_tenancyserviceprovider_register",
+      "illuminate_support_serviceprovider"
+    ],
+    "12": [
+      "composer_scripts",
+      "composer_scripts_dev",
+      "composer_scripts_post_autoload_dump",
+      "composer_scripts_post_create_project_cmd",
+      "composer_scripts_post_root_package_install",
+      "composer_scripts_post_update_cmd",
+      "ref_composer_config_disableprocesstimeout",
+      "ref_illuminate_foundation_composerscripts_postautoloaddump",
+      "ref_npx_concurrently_c_93c5fd_c4b5fd_fb7185_fdba74_php_artisan_serve_php_artisan_queue_listen_tries_1_php_artisan_pail_timeout_0_npm_run_dev_names_server_queue_logs_vite",
+      "ref_php_artisan_filament_upgrade",
+      "ref_php_artisan_key_generate_ansi",
+      "ref_php_artisan_migrate_graceful_ansi",
+      "ref_php_artisan_package_discover_ansi",
+      "ref_php_artisan_vendor_publish_tag_laravel_assets_ansi_force",
+      "ref_php_r_file_exists_database_database_sqlite_touch_database_database_sqlite",
+      "ref_php_r_file_exists_env_copy_env_example_env"
+    ],
+    "13": [
+      "app_filament_widgets_agentstats",
+      "app_filament_widgets_agentstats_agentstats",
+      "app_filament_widgets_agentstats_agentstats_getstats",
+      "app_modules_agentmonitoring_http_controllers_agentcontroller",
+      "app_modules_agentmonitoring_http_controllers_agentcontroller_agentcontroller",
+      "app_modules_agentmonitoring_http_controllers_agentcontroller_agentcontroller_index",
+      "app_modules_agentmonitoring_http_controllers_agentcontroller_agentcontroller_stats",
+      "app_modules_agentmonitoring_models_jobapplication",
+      "app_modules_agentmonitoring_models_jobapplication_jobapplication",
+      "app_modules_agentmonitoring_models_jobapplication_jobapplication_scopeplatform",
+      "app_modules_agentmonitoring_models_jobapplication_jobapplication_scopestatus",
+      "app_modules_agentmonitoring_models_runlog",
+      "app_modules_agentmonitoring_models_runlog_runlog",
+      "app_modules_agentmonitoring_routes",
+      "filament_widgets_statsoverviewwidget"
+    ],
+    "14": [
+      "app_filament_resources_contactmessageresource",
+      "app_filament_resources_contactmessageresource_contactmessageresource",
+      "app_filament_resources_contactmessageresource_contactmessageresource_cancreate",
+      "app_filament_resources_contactmessageresource_contactmessageresource_getnavigationbadge",
+      "app_filament_resources_contactmessageresource_contactmessageresource_getpages",
+      "app_filament_resources_contactmessageresource_contactmessageresource_table",
+      "app_filament_resources_planresource",
+      "app_filament_resources_planresource_pages_createplan",
+      "app_filament_resources_planresource_pages_createplan_createplan",
+      "app_filament_resources_planresource_planresource",
+      "app_filament_resources_planresource_planresource_form",
+      "app_filament_resources_planresource_planresource_getpages",
+      "app_filament_resources_planresource_planresource_table",
+      "filament_resources_resource"
+    ],
+    "15": [
+      "app_filament_resources_contactmessageresource_pages_createcontactmessage",
+      "app_filament_resources_contactmessageresource_pages_createcontactmessage_createcontactmessage",
+      "app_filament_resources_portfolioexperiencephotoresource",
+      "app_filament_resources_portfolioexperiencephotoresource_pages_createportfolioexperiencephoto",
+      "app_filament_resources_portfolioexperiencephotoresource_pages_createportfolioexperiencephoto_createportfolioexperiencephoto",
+      "app_filament_resources_portfolioprofileresource_pages_createportfolioprofile",
+      "app_filament_resources_portfolioprofileresource_pages_createportfolioprofile_createportfolioprofile",
+      "app_filament_resources_portfolioskillresource",
+      "app_filament_resources_portfolioskillresource_pages_createportfolioskill",
+      "app_filament_resources_portfolioskillresource_pages_createportfolioskill_createportfolioskill",
+      "app_filament_resources_subscriptionresource",
+      "app_filament_resources_subscriptionresource_pages_createsubscription",
+      "app_filament_resources_subscriptionresource_pages_createsubscription_createsubscription",
+      "filament_resources_pages_createrecord"
+    ],
+    "16": [
+      "app_filament_resources_invitationresource_invitationresource_form",
+      "app_filament_resources_themeresource",
+      "app_filament_resources_themeresource_pages_createtheme",
+      "app_filament_resources_themeresource_pages_createtheme_createtheme",
+      "app_filament_resources_themeresource_themeresource",
+      "app_filament_resources_themeresource_themeresource_form",
+      "app_filament_resources_themeresource_themeresource_getpages",
+      "app_filament_resources_themeresource_themeresource_table",
+      "app_modules_invitation_models_themeasset",
+      "app_modules_invitation_models_themeasset_themeasset",
+      "app_modules_invitation_models_themeasset_themeasset_scopeactive",
+      "illuminate_database_eloquent_builder"
+    ],
+    "17": [
+      "composer_require",
+      "composer_require_filament_filament",
+      "composer_require_laravel_framework",
+      "composer_require_laravel_pulse",
+      "composer_require_laravel_sanctum",
+      "composer_require_laravel_tinker",
+      "composer_require_midtrans_midtrans_php",
+      "composer_require_php",
+      "composer_require_spatie_laravel_activitylog",
+      "composer_require_spatie_laravel_permission",
+      "composer_require_stancl_tenancy"
+    ],
+    "18": [
+      "app_filament_resources_invitationresource_relationmanagers_guestsrelationmanager",
+      "app_filament_resources_invitationresource_relationmanagers_guestsrelationmanager_guestsrelationmanager",
+      "app_filament_resources_invitationresource_relationmanagers_guestsrelationmanager_guestsrelationmanager_form",
+      "app_filament_resources_invitationresource_relationmanagers_guestsrelationmanager_guestsrelationmanager_table",
+      "app_modules_invitation_support_guestsheetimporter",
+      "app_modules_invitation_support_guestsheetimporter_guestsheetimporter",
+      "app_modules_invitation_support_guestsheetimporter_guestsheetimporter_normalize",
+      "app_modules_invitation_support_guestsheetimporter_guestsheetimporter_parse",
+      "app_modules_invitation_support_guestsheetimporter_guestsheetimporter_parsecsv",
+      "app_modules_invitation_support_guestsheetimporter_guestsheetimporter_parsexlsx"
+    ],
+    "19": [
+      "pulse_cache",
+      "pulse_exceptions",
+      "pulse_queues",
+      "pulse_servers",
+      "pulse_slow_jobs",
+      "pulse_slow_outgoing_requests",
+      "pulse_slow_queries",
+      "pulse_slow_requests",
+      "pulse_usage",
+      "resources_views_vendor_pulse_dashboard_blade"
+    ],
+    "20": [
+      "app_filament_pages_dashboard",
+      "app_filament_pages_dashboard_dashboard",
+      "app_filament_pages_dashboard_dashboard_getheaderwidgets",
+      "app_providers_filament_adminpanelprovider",
+      "app_providers_filament_adminpanelprovider_adminpanelprovider",
+      "app_providers_filament_adminpanelprovider_adminpanelprovider_panel",
+      "filament_pages_page",
+      "filament_panel",
+      "filament_panelprovider"
+    ],
+    "21": [
+      "composer_require_dev",
+      "composer_require_dev_fakerphp_faker",
+      "composer_require_dev_laravel_pail",
+      "composer_require_dev_laravel_pint",
+      "composer_require_dev_laravel_sail",
+      "composer_require_dev_laravel_telescope",
+      "composer_require_dev_mockery_mockery",
+      "composer_require_dev_nunomaduro_collision",
+      "composer_require_dev_phpunit_phpunit"
+    ],
+    "22": [
+      "database_migrations_2020_05_15_000010_create_tenant_user_impersonation_tokens_table",
+      "database_migrations_2020_05_15_000010_create_tenant_user_impersonation_tokens_table_createtenantuserimpersonationtokenstable",
+      "database_migrations_2020_05_15_000010_create_tenant_user_impersonation_tokens_table_createtenantuserimpersonationtokenstable_down",
+      "database_migrations_2020_05_15_000010_create_tenant_user_impersonation_tokens_table_createtenantuserimpersonationtokenstable_up",
+      "database_migrations_2026_07_13_085738_add_batch_uuid_column_to_activity_log_table",
+      "database_migrations_2026_07_13_085738_add_batch_uuid_column_to_activity_log_table_addbatchuuidcolumntoactivitylogtable",
+      "database_migrations_2026_07_13_085738_add_batch_uuid_column_to_activity_log_table_addbatchuuidcolumntoactivitylogtable_down",
+      "database_migrations_2026_07_13_085738_add_batch_uuid_column_to_activity_log_table_addbatchuuidcolumntoactivitylogtable_up",
+      "illuminate_database_migrations_migration"
+    ],
+    "23": [
+      "app_filament_resources_invitationresource",
+      "app_filament_resources_invitationresource_invitationresource",
+      "app_filament_resources_invitationresource_invitationresource_getpages",
+      "app_filament_resources_invitationresource_invitationresource_getrelations",
+      "app_filament_resources_invitationresource_invitationresource_sectiondisplayfields",
+      "app_filament_resources_invitationresource_invitationresource_table",
+      "app_filament_resources_invitationresource_pages_createinvitation",
+      "app_filament_resources_invitationresource_pages_createinvitation_createinvitation"
+    ],
+    "24": [
+      "composer",
+      "composer_description",
+      "composer_license",
+      "composer_minimum_stability",
+      "composer_name",
+      "composer_prefer_stable",
+      "composer_schema",
+      "composer_type"
+    ],
+    "25": [
+      "app_filament_resources_portfolioeducationresource",
+      "app_filament_resources_portfolioeducationresource_pages_createportfolioeducation",
+      "app_filament_resources_portfolioeducationresource_pages_createportfolioeducation_createportfolioeducation",
+      "app_filament_resources_portfolioeducationresource_portfolioeducationresource",
+      "app_filament_resources_portfolioeducationresource_portfolioeducationresource_form",
+      "app_filament_resources_portfolioeducationresource_portfolioeducationresource_getpages",
+      "app_filament_resources_portfolioeducationresource_portfolioeducationresource_table"
+    ],
+    "26": [
+      "app_filament_resources_portfolioexperienceresource",
+      "app_filament_resources_portfolioexperienceresource_pages_createportfolioexperience",
+      "app_filament_resources_portfolioexperienceresource_pages_createportfolioexperience_createportfolioexperience",
+      "app_filament_resources_portfolioexperienceresource_portfolioexperienceresource",
+      "app_filament_resources_portfolioexperienceresource_portfolioexperienceresource_form",
+      "app_filament_resources_portfolioexperienceresource_portfolioexperienceresource_getpages",
+      "app_filament_resources_portfolioexperienceresource_portfolioexperienceresource_table"
+    ],
+    "27": [
+      "app_filament_resources_themeassetresource",
+      "app_filament_resources_themeassetresource_pages_createthemeasset",
+      "app_filament_resources_themeassetresource_pages_createthemeasset_createthemeasset",
+      "app_filament_resources_themeassetresource_themeassetresource",
+      "app_filament_resources_themeassetresource_themeassetresource_form",
+      "app_filament_resources_themeassetresource_themeassetresource_getpages",
+      "app_filament_resources_themeassetresource_themeassetresource_table"
+    ],
+    "28": [
+      "app_modules_invitation_models_themeasset_themeasset_optionsfor",
+      "database_factories_userfactory",
+      "database_factories_userfactory_userfactory",
+      "database_factories_userfactory_userfactory_definition",
+      "database_factories_userfactory_userfactory_unverified",
+      "illuminate_database_eloquent_factories_factory",
+      "static"
+    ],
+    "29": [
+      "composer_allow_plugins_pestphp_pest_plugin",
+      "composer_allow_plugins_php_http_discovery",
+      "composer_config",
+      "composer_config_allow_plugins",
+      "composer_config_optimize_autoloader",
+      "composer_config_preferred_install",
+      "composer_config_sort_packages"
+    ],
+    "30": [
+      "illuminate_foundation_testing_testcase",
+      "tests_feature_exampletest",
+      "tests_feature_exampletest_exampletest",
+      "tests_feature_exampletest_exampletest_test_the_application_returns_a_successful_response",
+      "tests_testcase",
+      "tests_testcase_testcase"
+    ],
+    "31": [
+      "composer_autoload",
+      "composer_autoload_psr_4",
+      "composer_psr_4_app",
+      "composer_psr_4_database_factories",
+      "composer_psr_4_database_seeders"
+    ],
+    "32": [
+      "composer_branch_alias_dev_master",
+      "composer_extra",
+      "composer_extra_branch_alias",
+      "composer_extra_laravel",
+      "composer_laravel_dont_discover"
+    ],
+    "33": [
+      "app_filament_resources_portfolioexperiencephotoresource_portfolioexperiencephotoresource",
+      "app_filament_resources_portfolioexperiencephotoresource_portfolioexperiencephotoresource_form",
+      "app_filament_resources_portfolioexperiencephotoresource_portfolioexperiencephotoresource_getpages",
+      "app_filament_resources_portfolioexperiencephotoresource_portfolioexperiencephotoresource_table"
+    ],
+    "34": [
+      "app_filament_resources_portfolioskillresource_portfolioskillresource",
+      "app_filament_resources_portfolioskillresource_portfolioskillresource_form",
+      "app_filament_resources_portfolioskillresource_portfolioskillresource_getpages",
+      "app_filament_resources_portfolioskillresource_portfolioskillresource_table"
+    ],
+    "35": [
+      "app_filament_resources_subscriptionresource_subscriptionresource",
+      "app_filament_resources_subscriptionresource_subscriptionresource_form",
+      "app_filament_resources_subscriptionresource_subscriptionresource_getpages",
+      "app_filament_resources_subscriptionresource_subscriptionresource_table"
+    ],
+    "36": [
+      "database_migrations_2026_07_13_085736_create_activity_log_table",
+      "database_migrations_2026_07_13_085736_create_activity_log_table_createactivitylogtable",
+      "database_migrations_2026_07_13_085736_create_activity_log_table_createactivitylogtable_down",
+      "database_migrations_2026_07_13_085736_create_activity_log_table_createactivitylogtable_up"
+    ],
+    "37": [
+      "database_migrations_2026_07_13_085737_add_event_column_to_activity_log_table",
+      "database_migrations_2026_07_13_085737_add_event_column_to_activity_log_table_addeventcolumntoactivitylogtable",
+      "database_migrations_2026_07_13_085737_add_event_column_to_activity_log_table_addeventcolumntoactivitylogtable_down",
+      "database_migrations_2026_07_13_085737_add_event_column_to_activity_log_table_addeventcolumntoactivitylogtable_up"
+    ],
+    "38": [
+      "phpunit_framework_testcase",
+      "tests_unit_exampletest",
+      "tests_unit_exampletest_exampletest",
+      "tests_unit_exampletest_exampletest_test_that_true_is_true"
+    ],
+    "39": [
+      "app_modules_invitation_database_migrations_2026_01_01_000003_create_themes_table",
+      "app_modules_invitation_database_migrations_2026_01_01_000003_create_themes_table_down",
+      "app_modules_invitation_database_migrations_2026_01_01_000003_create_themes_table_up"
+    ],
+    "40": [
+      "app_modules_invitation_database_migrations_2026_01_01_000004_create_invitation_tables",
+      "app_modules_invitation_database_migrations_2026_01_01_000004_create_invitation_tables_down",
+      "app_modules_invitation_database_migrations_2026_01_01_000004_create_invitation_tables_up"
+    ],
+    "41": [
+      "app_modules_invitation_database_migrations_2026_07_14_000001_add_feature_toggles_to_plans",
+      "app_modules_invitation_database_migrations_2026_07_14_000001_add_feature_toggles_to_plans_down",
+      "app_modules_invitation_database_migrations_2026_07_14_000001_add_feature_toggles_to_plans_up"
+    ],
+    "42": [
+      "app_modules_invitation_database_migrations_2026_07_14_000002_add_video_and_cohosts_to_invitations",
+      "app_modules_invitation_database_migrations_2026_07_14_000002_add_video_and_cohosts_to_invitations_down",
+      "app_modules_invitation_database_migrations_2026_07_14_000002_add_video_and_cohosts_to_invitations_up"
+    ],
+    "43": [
+      "app_modules_invitation_database_migrations_2026_07_17_000001_create_theme_assets_table",
+      "app_modules_invitation_database_migrations_2026_07_17_000001_create_theme_assets_table_down",
+      "app_modules_invitation_database_migrations_2026_07_17_000001_create_theme_assets_table_up"
+    ],
+    "44": [
+      "app_modules_invitation_database_migrations_2026_07_17_000002_create_guests_table",
+      "app_modules_invitation_database_migrations_2026_07_17_000002_create_guests_table_down",
+      "app_modules_invitation_database_migrations_2026_07_17_000002_create_guests_table_up"
+    ],
+    "45": [
+      "app_modules_invitation_database_migrations_2026_07_18_000001_add_parent_id_to_themes_table",
+      "app_modules_invitation_database_migrations_2026_07_18_000001_add_parent_id_to_themes_table_down",
+      "app_modules_invitation_database_migrations_2026_07_18_000001_add_parent_id_to_themes_table_up"
+    ],
+    "46": [
+      "app_modules_invitation_database_migrations_2026_07_19_000001_add_photo_to_love_stories_table",
+      "app_modules_invitation_database_migrations_2026_07_19_000001_add_photo_to_love_stories_table_down",
+      "app_modules_invitation_database_migrations_2026_07_19_000001_add_photo_to_love_stories_table_up"
+    ],
+    "47": [
+      "app_modules_portfolio_database_migrations_2026_01_01_000005_create_portfolio_tables",
+      "app_modules_portfolio_database_migrations_2026_01_01_000005_create_portfolio_tables_down",
+      "app_modules_portfolio_database_migrations_2026_01_01_000005_create_portfolio_tables_up"
+    ],
+    "48": [
+      "app_modules_portfolio_database_migrations_2026_07_14_000010_add_documentation_to_portfolio_experiences",
+      "app_modules_portfolio_database_migrations_2026_07_14_000010_add_documentation_to_portfolio_experiences_down",
+      "app_modules_portfolio_database_migrations_2026_07_14_000010_add_documentation_to_portfolio_experiences_up"
+    ],
+    "49": [
+      "composer_autoload_dev",
+      "composer_autoload_dev_psr_4",
+      "composer_psr_4_tests"
+    ],
+    "50": [
+      "composer_keywords",
+      "ref_framework",
+      "ref_laravel"
+    ],
+    "51": [
+      "database_migrations_0001_01_01_000000_create_users_table",
+      "database_migrations_0001_01_01_000000_create_users_table_down",
+      "database_migrations_0001_01_01_000000_create_users_table_up"
+    ],
+    "52": [
+      "database_migrations_0001_01_01_000001_create_cache_table",
+      "database_migrations_0001_01_01_000001_create_cache_table_down",
+      "database_migrations_0001_01_01_000001_create_cache_table_up"
+    ],
+    "53": [
+      "database_migrations_0001_01_01_000002_create_jobs_table",
+      "database_migrations_0001_01_01_000002_create_jobs_table_down",
+      "database_migrations_0001_01_01_000002_create_jobs_table_up"
+    ],
+    "54": [
+      "database_migrations_2019_09_15_000010_create_tenants_and_domains",
+      "database_migrations_2019_09_15_000010_create_tenants_and_domains_down",
+      "database_migrations_2019_09_15_000010_create_tenants_and_domains_up"
+    ],
+    "55": [
+      "database_migrations_2026_01_01_000002_create_billing_tables",
+      "database_migrations_2026_01_01_000002_create_billing_tables_down",
+      "database_migrations_2026_01_01_000002_create_billing_tables_up"
+    ],
+    "56": [
+      "database_migrations_2026_07_13_085727_create_permission_tables",
+      "database_migrations_2026_07_13_085727_create_permission_tables_down",
+      "database_migrations_2026_07_13_085727_create_permission_tables_up"
+    ],
+    "57": [
+      "database_migrations_2026_07_13_092006_create_pulse_tables",
+      "database_migrations_2026_07_13_092006_create_pulse_tables_down",
+      "database_migrations_2026_07_13_092006_create_pulse_tables_up"
+    ],
+    "58": [
+      "app_http_controllers_controller",
+      "app_http_controllers_controller_controller"
+    ],
+    "59": [
+      "artisan",
+      "routes_console"
+    ],
+    "60": [
+      "deploy_scripts_add_custom_domain",
+      "deploy_scripts_add_custom_domain_sh__entry"
+    ],
+    "61": [
+      "deploy_scripts_deploy",
+      "deploy_scripts_deploy_sh__entry"
+    ],
+    "62": [
+      "resources_js_app",
+      "resources_js_bootstrap"
+    ],
+    "63": [
+      "app_modules_template_routes"
+    ],
+    "64": [
+      "bootstrap_app"
+    ],
+    "65": [
+      "bootstrap_providers"
+    ],
+    "66": [
+      "config_app"
+    ],
+    "67": [
+      "config_cache"
+    ],
+    "68": [
+      "config_cors_snippet"
+    ],
+    "69": [
+      "config_database"
+    ],
+    "70": [
+      "config_filesystems"
+    ],
+    "71": [
+      "config_logging"
+    ],
+    "72": [
+      "config_mail"
+    ],
+    "73": [
+      "config_pulse"
+    ],
+    "74": [
+      "config_queue"
+    ],
+    "75": [
+      "config_services"
+    ],
+    "76": [
+      "config_session"
+    ],
+    "77": [
+      "config_tenancy"
+    ],
+    "78": [
+      "public_index"
+    ],
+    "79": [
+      "resources_views_filament_pages_dashboard_blade"
+    ],
+    "80": [
+      "resources_views_welcome_blade"
+    ],
+    "81": [
+      "routes_tenant"
+    ],
+    "82": [
+      "routes_web"
+    ],
+    "83": [
+      "vite_config"
+    ],
+    "84": [
+      "app_modules_portfolio_models_experiencephoto",
+      "app_modules_portfolio_models_experiencephoto_experiencephoto",
+      "app_modules_portfolio_models_experiencephoto_experiencephoto_experience",
+      "app_modules_portfolio_models_experiencephoto_experiencephoto_geturlattribute"
+    ]
+  },
+  "cohesion": {
+    "0": 0.06836055656382335,
+    "1": 0.08912655971479501,
+    "2": 0.0784313725490196,
+    "3": 0.0784313725490196,
+    "4": 0.13666666666666666,
+    "5": 0.24561403508771928,
+    "6": 0.16996047430830039,
+    "7": 0.14035087719298245,
+    "8": 0.1871345029239766,
+    "9": 0.10526315789473684,
+    "10": 0.15833333333333333,
+    "11": 0.18333333333333332,
+    "12": 0.125,
+    "13": 0.17142857142857143,
+    "14": 0.16483516483516483,
+    "15": 0.1978021978021978,
+    "16": 0.19696969696969696,
+    "17": 0.18181818181818182,
+    "18": 0.24444444444444444,
+    "19": 0.2,
+    "20": 0.3055555555555556,
+    "21": 0.2222222222222222,
+    "22": 0.2777777777777778,
+    "23": 0.25,
+    "24": 0.25,
+    "25": 0.2857142857142857,
+    "26": 0.2857142857142857,
+    "27": 0.2857142857142857,
+    "28": 0.38095238095238093,
+    "29": 0.2857142857142857,
+    "30": 0.4,
+    "31": 0.4,
+    "32": 0.4,
+    "33": 0.5,
+    "34": 0.5,
+    "35": 0.5,
+    "36": 0.5,
+    "37": 0.5,
+    "38": 0.6666666666666666,
+    "39": 0.6666666666666666,
+    "40": 0.6666666666666666,
+    "41": 0.6666666666666666,
+    "42": 0.6666666666666666,
+    "43": 0.6666666666666666,
+    "44": 0.6666666666666666,
+    "45": 0.6666666666666666,
+    "46": 0.6666666666666666,
+    "47": 0.6666666666666666,
+    "48": 0.6666666666666666,
+    "49": 0.6666666666666666,
+    "50": 0.6666666666666666,
+    "51": 0.6666666666666666,
+    "52": 0.6666666666666666,
+    "53": 0.6666666666666666,
+    "54": 0.6666666666666666,
+    "55": 0.6666666666666666,
+    "56": 0.6666666666666666,
+    "57": 0.6666666666666666,
+    "58": 1.0,
+    "59": 1.0,
+    "60": 1.0,
+    "61": 1.0,
+    "62": 1.0,
+    "63": 1.0,
+    "64": 1.0,
+    "65": 1.0,
+    "66": 1.0,
+    "67": 1.0,
+    "68": 1.0,
+    "69": 1.0,
+    "70": 1.0,
+    "71": 1.0,
+    "72": 1.0,
+    "73": 1.0,
+    "74": 1.0,
+    "75": 1.0,
+    "76": 1.0,
+    "77": 1.0,
+    "78": 1.0,
+    "79": 1.0,
+    "80": 1.0,
+    "81": 1.0,
+    "82": 1.0,
+    "83": 1.0,
+    "84": 0.5
+  },
+  "gods": [
+    {
+      "id": "app_modules_invitation_models_invitation_invitation",
+      "label": "Invitation",
+      "degree": 38
+    },
+    {
+      "id": "app_core_models_tenant_tenant",
+      "label": "Tenant",
+      "degree": 23
+    },
+    {
+      "id": "app_core_models_user_user",
+      "label": "User",
+      "degree": 21
+    },
+    {
+      "id": "app_core_models_plan_plan",
+      "label": "Plan",
+      "degree": 12
+    },
+    {
+      "id": "app_core_services_planlimitservice_planlimitservice",
+      "label": "PlanLimitService",
+      "degree": 12
+    },
+    {
+      "id": "app_core_models_payment_payment",
+      "label": "Payment",
+      "degree": 11
+    },
+    {
+      "id": "composer_require",
+      "label": "require",
+      "degree": 11
+    },
+    {
+      "id": "app_modules_invitation_http_controllers_invitationcontroller_invitationcontroller",
+      "label": "InvitationController",
+      "degree": 10
+    },
+    {
+      "id": "app_modules_invitation_models_theme_theme",
+      "label": "Theme",
+      "degree": 10
+    },
+    {
+      "id": "app_core_models_subscription_subscription",
+      "label": "Subscription",
+      "degree": 9
+    }
+  ],
+  "surprises": [
+    {
+      "source": "InvitationController",
+      "target": "PlanLimitService",
+      "source_files": [
+        "app/Modules/Invitation/Http/Controllers/InvitationController.php",
+        "app/Core/Services/PlanLimitService.php"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "CheckoutController",
+      "target": "MidtransService",
+      "source_files": [
+        "app/Core/Http/Controllers/CheckoutController.php",
+        "app/Core/Services/MidtransService.php"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "cross-file semantic connection"
+    },
+    {
+      "source": "ExampleTest",
+      "target": "TestCase",
+      "source_files": [
+        "tests/Feature/ExampleTest.php",
+        "tests/TestCase.php"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "inherits",
+      "why": "cross-file semantic connection"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `Invitation` connect `Invitation` to `User`, `Payment`, `.run`, `Illuminate\\Database\\Eloquent\\Model`?",
+      "why": "High betweenness centrality (0.066) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Tenant` connect `Tenant` to `Invitation`, `Payment`, `.run`, `Subscription`?",
+      "why": "High betweenness centrality (0.025) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Plan` connect `.run` to `User`, `SubscriptionResource`, `Illuminate\\Database\\Eloquent\\Model`, `Subscription`, `Tenant`?",
+      "why": "High betweenness centrality (0.021) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 4 inferred relationships involving `Invitation` (e.g. with `.getStats()` and `.store()`) actually correct?",
+      "why": "`Invitation` has 4 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `Controller`, `$schema`, `name` to the rest of the system?",
+      "why": "70 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Invitation` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.06836055656382335 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `User` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.08912655971479501 - nodes in this community are weakly interconnected."
+    }
+  ]
+}

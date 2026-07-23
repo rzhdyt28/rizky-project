@@ -102,6 +102,10 @@ class InvitationController extends Controller
             'co_hosts'          => ['nullable', 'array'],
             'co_hosts.*.name'   => ['required_with:co_hosts', 'string', 'max:150'],
             'co_hosts.*.side'   => ['nullable', Rule::in(['pria', 'wanita', 'spesial'])],
+            // 'theme_options' SENGAJA tidak lagi diterima di sini (v4+) -- kolom
+            // itu tidak dibaca render publik (lihat PublicInvitationController),
+            // pengaturan visual sekarang hidup di default_options CHILD THEME,
+            // baca/tulis lewat look()/lookUpdate() di bawah.
         ]);
 
         if (($data['status'] ?? null) === 'published' && ! $invitation->published_at) {
@@ -130,6 +134,32 @@ class InvitationController extends Controller
         $invitation->delete();
 
         return response()->noContent();
+    }
+
+    /**
+     * TAMPILAN UNDANGAN (v4+) — pengaturan visual (warna, font, gaya kartu,
+     * layout hero, dst) hidup di default_options milik CHILD THEME undangan
+     * ini (Invitation::theme, diprovisioning otomatis saat store()), BUKAN di
+     * kolom Invitation.theme_options yang sudah tidak dibaca render publik
+     * (lihat PublicInvitationController::show()). Setara InvitationLookResource
+     * di Filament admin, tapi untuk dashboard customer sendiri (EditUndangan.vue).
+     */
+    public function look(Invitation $invitation)
+    {
+        $this->authorize('update', $invitation);
+
+        return ['default_options' => $invitation->theme?->default_options ?? []];
+    }
+
+    public function updateLook(Request $request, Invitation $invitation)
+    {
+        $this->authorize('update', $invitation);
+        abort_unless($invitation->theme, 422, 'Undangan ini belum punya tema ter-provisioning.');
+
+        $data = $request->validate(['default_options' => ['required', 'array']]);
+        $invitation->theme->update(['default_options' => $data['default_options']]);
+
+        return ['default_options' => $invitation->theme->fresh()->default_options];
     }
 
     /**

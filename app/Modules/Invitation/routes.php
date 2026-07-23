@@ -25,6 +25,8 @@ Route::middleware(['auth:sanctum', 'subscription.active'])->group(function () {
     Route::get('/themes', [InvitationController::class, 'themes']);
     Route::apiResource('/', InvitationController::class)->parameters(['' => 'invitation']);
     Route::post('/{invitation}/upload', [InvitationController::class, 'upload']);
+    Route::get('/{invitation}/look',    [InvitationController::class, 'look']);
+    Route::put('/{invitation}/look',    [InvitationController::class, 'updateLook']);
 
     Route::get('/{invitation}/rsvps',        [RsvpController::class, 'index']);
     Route::get('/{invitation}/rsvps/export', [RsvpController::class, 'export']);

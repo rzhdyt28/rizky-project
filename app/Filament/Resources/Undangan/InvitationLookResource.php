@@ -41,38 +41,6 @@ class InvitationLookResource extends Resource
         return parent::getEloquentQuery()->whereNotNull('invitation_id');
     }
 
-    /** Elemen hero yang bisa diatur bebas (order + rata) di mode Custom. */
-    protected const HERO_ELEMENTS = [
-        'eyebrow'   => 'Label "Undangan Pernikahan"',
-        'photo'     => 'Foto berbingkai (dari "Foto utama")',
-        'names'     => 'Nama pasangan',
-        'date'      => 'Tanggal acara',
-        'countdown' => 'Countdown',
-        'dresscode' => 'Dress code',
-        'guest'     => 'Kepada (nama tamu)',
-        'button'    => 'Tombol "Buka Undangan"',
-    ];
-
-    protected static function heroElementFields(): array
-    {
-        $fields = [];
-        $i = 0;
-        foreach (self::HERO_ELEMENTS as $key => $label) {
-            $i++;
-            $fields[] = Forms\Components\Grid::make(['default' => 1, 'sm' => 2])->schema([
-                Forms\Components\Select::make("default_options.hero.elements.$key.align")
-                    ->label($label)
-                    ->options(['left' => 'Rata kiri', 'center' => 'Rata tengah', 'right' => 'Rata kanan'])
-                    ->placeholder('Tengah (default)'),
-                Forms\Components\TextInput::make("default_options.hero.elements.$key.order")
-                    ->label('Urutan')
-                    ->numeric()->minValue(1)->maxValue(8)
-                    ->placeholder((string) $i),
-            ]);
-        }
-
-        return $fields;
-    }
 
     /**
      * @param  bool  $withCardFields  Hero TIDAK pakai ini (false) -- hero punya field kartu SENDIRI
@@ -376,19 +344,28 @@ class InvitationLookResource extends Resource
             Forms\Components\Section::make('Floral 4 Sudut Halaman')
                 ->collapsed()
                 ->schema([
+                    Forms\Components\Toggle::make('default_options.florals.disabled')
+                        ->label('Nonaktifkan floral sepenuhnya')
+                        ->helperText('Beda dari mengosongkan pilihan di bawah (yang berarti "pakai floral bawaan tema"): toggle ini benar-benar MELEPAS floral, tidak jatuh ke bawaan tema sama sekali.')
+                        ->live()
+                        ->columnSpanFull(),
                     Forms\Components\Select::make('default_options.florals.tl')
+                        ->disabled(fn (Forms\Get $get) => (bool) $get('default_options.florals.disabled'))
                         ->label('Floral kiri-atas')
                         ->options(fn () => ThemeAsset::optionsFor('ornament'))
                         ->searchable()->placeholder('— tanpa floral —'),
                     Forms\Components\Select::make('default_options.florals.tr')
+                        ->disabled(fn (Forms\Get $get) => (bool) $get('default_options.florals.disabled'))
                         ->label('Floral kanan-atas')
                         ->options(fn () => ThemeAsset::optionsFor('ornament'))
                         ->searchable()->placeholder('— tanpa floral —'),
                     Forms\Components\Select::make('default_options.florals.bl')
+                        ->disabled(fn (Forms\Get $get) => (bool) $get('default_options.florals.disabled'))
                         ->label('Floral kiri-bawah')
                         ->options(fn () => ThemeAsset::optionsFor('ornament'))
                         ->searchable()->placeholder('— tanpa floral —'),
                     Forms\Components\Select::make('default_options.florals.br')
+                        ->disabled(fn (Forms\Get $get) => (bool) $get('default_options.florals.disabled'))
                         ->label('Floral kanan-bawah')
                         ->options(fn () => ThemeAsset::optionsFor('ornament'))
                         ->searchable()->placeholder('— tanpa floral —'),
@@ -429,10 +406,10 @@ class InvitationLookResource extends Resource
                         ->live()
                         ->options(ThemeOptionsSchema::HERO_STYLES)
                         ->placeholder('Classic (default)')
-                        ->helperText('Model Framed/Split/Custom/Arch/Polaroid memakai "Foto Berbingkai Hero" di bawah -- WAJIB diisi di situ, kalau tidak foto tidak akan tampil (field ini TERPISAH dari background halaman di tab Global). Hanya berlaku untuk tema yang mendukung banyak layout hero (saat ini: Mildness) — tema lain (mis. Senja) mengabaikan pilihan ini dan selalu pakai layout hero bawaannya sendiri.')
+                        ->helperText('Model Framed/Split/Arch/Polaroid/Poster memakai "Foto Berbingkai Hero" di bawah -- WAJIB diisi di situ, kalau tidak foto tidak akan tampil (field ini TERPISAH dari background halaman di tab Global). Hanya berlaku untuk tema yang mendukung banyak layout hero (saat ini: Mildness) — tema lain (mis. Senja) mengabaikan pilihan ini dan selalu pakai layout hero bawaannya sendiri.')
                         ->columnSpanFull(),
                     Forms\Components\Fieldset::make('Foto Berbingkai Hero')
-                        ->visible(fn (Forms\Get $get) => in_array($get('default_options.hero.style'), ['framed', 'split', 'custom', 'arch', 'polaroid'], true))
+                        ->visible(fn (Forms\Get $get) => in_array($get('default_options.hero.style'), ['framed', 'split', 'arch', 'polaroid', 'poster'], true))
                         ->columnSpanFull()
                         ->columns(['default' => 1, 'sm' => 2])
                         ->schema([
@@ -440,14 +417,13 @@ class InvitationLookResource extends Resource
                                 ->label('Foto berbingkai')
                                 ->image()->disk('public')->directory('undangan/covers')
                                 ->live()
-                                ->helperText('Khusus untuk gaya hero Framed/Split/Custom/Arch/Polaroid -- TERPISAH dari background halaman (tab Global). Kosong = tidak ada foto berbingkai yang tampil.')
+                                ->imageEditor()
+                                ->imageEditorAspectRatios(['1:1', '3:4', '4:5', null])
+                                ->imageEditorViewportWidth('800')
+                                ->imageEditorViewportHeight('1000')
+                                ->helperText('Khusus untuk gaya hero Framed/Split/Arch/Polaroid/Poster -- TERPISAH dari background halaman (tab Global). Kosong = tidak ada foto berbingkai yang tampil. Setelah upload, klik foto untuk buka alat crop -- atur posisi & rasio SEBELUM simpan, supaya wajah/objek penting tidak terpotong saat foto dipangkas otomatis ke bentuk bingkai (rekomendasi rasio: 1:1 utk Framed, 3:4 utk Split, 4:5 utk Arch/Polaroid/Poster).')
                                 ->columnSpanFull(),
                         ]),
-
-                    Forms\Components\Fieldset::make('Atur bebas tiap elemen (mode Custom)')
-                        ->visible(fn (Forms\Get $get) => $get('default_options.hero.style') === 'custom')
-                        ->columnSpanFull()
-                        ->schema(self::heroElementFields()),
 
                     Forms\Components\Fieldset::make('Dresscode')
                         ->columns(['default' => 1, 'sm' => 2])

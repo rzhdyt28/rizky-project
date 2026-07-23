@@ -99,7 +99,11 @@ class ThemeResource extends Resource
                                 Forms\Components\FileUpload::make('default_options.hero.framed_photo')
                                     ->label('Foto berbingkai')
                                     ->image()->disk('public')->directory('undangan/covers')
-                                    ->helperText('Khusus gaya Framed/Split/Custom/Arch/Polaroid -- TERPISAH dari background halaman di bawah. Biasanya dikosongkan di tema dasar (foto asli pasangan diisi per-undangan), kecuali untuk contoh/preview tema.'),
+                                    ->imageEditor()
+                                    ->imageEditorAspectRatios(['1:1', '3:4', '4:5', null])
+                                    ->imageEditorViewportWidth('800')
+                                    ->imageEditorViewportHeight('1000')
+                                    ->helperText('Khusus gaya Framed/Split/Custom/Arch/Polaroid -- TERPISAH dari background halaman di bawah. Biasanya dikosongkan di tema dasar (foto asli pasangan diisi per-undangan), kecuali untuk contoh/preview tema. Klik foto setelah upload untuk crop (rekomendasi rasio: 1:1 Framed/Custom, 3:4 Split, 4:5 Arch/Polaroid).'),
                             ]),
 
                         Forms\Components\Fieldset::make('Dresscode (default)')
@@ -191,19 +195,28 @@ class ThemeResource extends Resource
                         ->options(fn () => ThemeAsset::optionsFor('ornament') + ThemeAsset::optionsFor('divider'))
                         ->searchable()->placeholder('— pilih dari pustaka —')
                         ->helperText('Lapis ornamen transparan di latar halaman (foto pengantin diatur per-undangan).'),
+                    Forms\Components\Toggle::make('default_options.florals.disabled')
+                        ->label('Nonaktifkan floral sepenuhnya')
+                        ->helperText('Beda dari mengosongkan pilihan di bawah (=pakai floral SVG bawaan): toggle ini benar-benar MELEPAS floral, tidak ada floral sama sekali.')
+                        ->live()
+                        ->columnSpanFull(),
                     Forms\Components\Select::make('default_options.florals.tl')
+                        ->disabled(fn (Forms\Get $get) => (bool) $get('default_options.florals.disabled'))
                         ->label('Floral atas 1 (kiri-atas)')
                         ->options(fn () => ThemeAsset::optionsFor('ornament'))
                         ->searchable()->placeholder('— tanpa floral —'),
                     Forms\Components\Select::make('default_options.florals.tr')
+                        ->disabled(fn (Forms\Get $get) => (bool) $get('default_options.florals.disabled'))
                         ->label('Floral atas 2 (kanan-atas)')
                         ->options(fn () => ThemeAsset::optionsFor('ornament'))
                         ->searchable()->placeholder('— tanpa floral —'),
                     Forms\Components\Select::make('default_options.florals.bl')
+                        ->disabled(fn (Forms\Get $get) => (bool) $get('default_options.florals.disabled'))
                         ->label('Floral bawah 1 (kiri-bawah)')
                         ->options(fn () => ThemeAsset::optionsFor('ornament'))
                         ->searchable()->placeholder('— tanpa floral —'),
                     Forms\Components\Select::make('default_options.florals.br')
+                        ->disabled(fn (Forms\Get $get) => (bool) $get('default_options.florals.disabled'))
                         ->label('Floral bawah 2 (kanan-bawah)')
                         ->options(fn () => ThemeAsset::optionsFor('ornament'))
                         ->searchable()->placeholder('— tanpa floral —'),
