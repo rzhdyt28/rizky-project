@@ -23,9 +23,9 @@ use Illuminate\Support\Str;
  * Undangan demo LENGKAP & VARIATIF — 4 pasangan, sengaja beda kombinasi
  * gaya section (hero/couple/countdown/kisah/galeri) supaya semua varian
  * gaya yang ada di ThemeOptionsSchema teruji sekaligus lewat data nyata.
- * Foto dari public/storage/example/ (bride.jpg, groom.jpg, image1-10.jpg,
+ * Foto dari public/storage/undangan/example/ (bride.jpg, groom.jpg, image1-10.jpg,
  * akad-background.webp, resepsi-background.webp, QRIS.png) -- disimpan
- * sebagai path relatif ke disk 'public' (mis. "example/bride.jpg"), TIDAK
+ * sebagai path relatif ke disk 'public' (mis. "undangan/example/bride.jpg"), TIDAK
  * disalin ke folder lain.
  *
  * PENTING (v4 arsitektur): pengaturan visual TIDAK LAGI ditulis ke
@@ -41,19 +41,19 @@ use Illuminate\Support\Str;
  */
 class InvitationDemoSeeder extends Seeder
 {
-    /** Semua path relatif ke disk 'public' (storage/app/public/example/...). */
+    /** Semua path relatif ke disk 'public' (storage/app/public/undangan/example/...). */
     private const GALLERY = [
-        'example/image1.jpg', 'example/image2.jpg', 'example/image3.jpg', 'example/image4.jpg',
-        'example/image5.jpg', 'example/image6.jpg', 'example/image7.jpg', 'example/image8.jpg',
-        'example/image9.jpg', 'example/image10.jpg',
+        'undangan/example/image1.jpg', 'undangan/example/image2.jpg', 'undangan/example/image3.jpg', 'undangan/example/image4.jpg',
+        'undangan/example/image5.jpg', 'undangan/example/image6.jpg', 'undangan/example/image7.jpg', 'undangan/example/image8.jpg',
+        'undangan/example/image9.jpg', 'undangan/example/image10.jpg',
     ];
 
-    private const HERO_PHOTO = 'example/about.jpg';
-    private const BRIDE_PHOTO = 'example/bride.jpg';
-    private const GROOM_PHOTO = 'example/groom.jpg';
-    private const AKAD_BG = 'example/akad-background.webp';
-    private const RESEPSI_BG = 'example/resepsi-background.webp';
-    private const QRIS = 'example/QRIS.png';
+    private const HERO_PHOTO = 'undangan/example/about.jpg';
+    private const BRIDE_PHOTO = 'undangan/example/bride.jpg';
+    private const GROOM_PHOTO = 'undangan/example/groom.jpg';
+    private const AKAD_BG = 'undangan/example/akad-background.webp';
+    private const RESEPSI_BG = 'undangan/example/resepsi-background.webp';
+    private const QRIS = 'undangan/example/QRIS.png';
 
     /**
      * Satu baris = satu undangan demo, SENGAJA beda kombinasi gaya section
@@ -175,12 +175,9 @@ class InvitationDemoSeeder extends Seeder
         $childTheme->update([
             'default_options' => [
                 'layout'   => ['section_height' => 'smart'],
-                'background' => [
-                    'photo'        => self::HERO_PHOTO,
-                    'photo_mobile' => self::HERO_PHOTO,
-                ],
                 'hero' => [
                     'style'             => $couple['hero_style'],
+                    'slideshow'         => [self::HERO_PHOTO],
                     'dresscode_enabled' => true,
                     'dresscode'         => 'Batik / Nuansa Earth Tone',
                 ],

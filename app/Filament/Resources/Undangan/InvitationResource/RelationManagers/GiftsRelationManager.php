@@ -27,7 +27,7 @@ class GiftsRelationManager extends RelationManager
                 ->visible(fn (Forms\Get $get) => in_array($get('type'), ['bank', 'ewallet'])),
             Forms\Components\TextInput::make('account_number')->label('Nomor')
                 ->visible(fn (Forms\Get $get) => in_array($get('type'), ['bank', 'ewallet'])),
-            Forms\Components\FileUpload::make('qris_image')->image()->directory('qris')
+            Forms\Components\FileUpload::make('qris_image')->image()->directory('undangan/qris')
                 ->visible(fn (Forms\Get $get) => $get('type') === 'qris'),
             Forms\Components\Textarea::make('shipping_address')->rows(2)
                 ->visible(fn (Forms\Get $get) => $get('type') === 'address'),

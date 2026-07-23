@@ -30,7 +30,7 @@ class GalleryPhotosRelationManager extends RelationManager
                 ->label('Foto')
                 ->image()
                 ->disk('public')          // WAJIB public agar bisa diakses lewat /storage/...
-                ->directory('gallery')     // tersimpan di storage/app/public/gallery
+                ->directory('undangan/gallery')     // tersimpan di storage/app/public/undangan/gallery
                 ->imageEditor()
                 ->maxSize(4096)            // 4 MB, sesuaikan bila perlu
                 ->required()

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220">
+  <!-- Ornamen Jawa/batik -- motif sulur (tendril) melengkung dari sudut,
+       ceplok/kawung (empat kelopak bertumpuk) di ujung sulur, dan isen-isen
+       (titik-titik kecil) khas batik. Palet emas-coklat. -->
+  <g fill="none" stroke="#8A5A22" stroke-width="1.4" opacity="0.75">
+    <path d="M6 130 Q 45 55 95 42 Q 140 30 150 8" />
+    <path d="M18 155 Q 58 100 100 78" />
+    <path d="M34 175 Q 66 138 92 112" />
+  </g>
+  <!-- sulur kecil melengkung dengan ujung keriting -->
+  <g fill="none" stroke="#8A5A22" stroke-width="1.1" opacity="0.6">
+    <path d="M60 60 Q 72 48 68 36 Q 64 26 74 24" />
+    <path d="M28 100 Q 40 90 36 78 Q 33 68 43 66" />
+  </g>
+  <!-- motif ceplok/kawung: 4 kelopak bertumpuk membentuk belah ketupat -->
+  <g transform="translate(60,50)">
+    <ellipse cx="0" cy="-16" rx="10" ry="16" fill="#B8860B" opacity="0.85" />
+    <ellipse cx="0" cy="16" rx="10" ry="16" fill="#B8860B" opacity="0.85" />
+    <ellipse cx="-16" cy="0" rx="16" ry="10" fill="#8A5A22" opacity="0.85" />
+    <ellipse cx="16" cy="0" rx="16" ry="10" fill="#8A5A22" opacity="0.85" />
+    <circle cx="0" cy="0" r="8" fill="#F4E3B2" stroke="#8A5A22" stroke-width="1" />
+  </g>
+  <!-- motif ceplok kecil kedua -->
+  <g transform="translate(108,26) scale(0.55)">
+    <ellipse cx="0" cy="-16" rx="10" ry="16" fill="#B8860B" opacity="0.8" />
+    <ellipse cx="0" cy="16" rx="10" ry="16" fill="#B8860B" opacity="0.8" />
+    <ellipse cx="-16" cy="0" rx="16" ry="10" fill="#8A5A22" opacity="0.8" />
+    <ellipse cx="16" cy="0" rx="16" ry="10" fill="#8A5A22" opacity="0.8" />
+    <circle cx="0" cy="0" r="8" fill="#F4E3B2" stroke="#8A5A22" stroke-width="1" />
+  </g>
+  <!-- daun/sulur tambahan -->
+  <g fill="#8A5A22" opacity="0.4">
+    <ellipse cx="40" cy="130" rx="7" ry="17" transform="rotate(35 40 130)" />
+    <ellipse cx="78" cy="92" rx="6" ry="14" transform="rotate(-15 78 92)" />
+    <ellipse cx="122" cy="52" rx="6" ry="13" transform="rotate(55 122 52)" />
+  </g>
+  <!-- isen-isen: titik-titik kecil khas batik -->
+  <g fill="#B8860B" opacity="0.7">
+    <circle cx="20" cy="60" r="2" />
+    <circle cx="30" cy="45" r="2" />
+    <circle cx="45" cy="90" r="2" />
+    <circle cx="90" cy="15" r="2" />
+    <circle cx="115" cy="45" r="2" />
+    <circle cx="55" cy="105" r="2" />
+    <circle cx="14" cy="110" r="2" />
+  </g>
+</svg>

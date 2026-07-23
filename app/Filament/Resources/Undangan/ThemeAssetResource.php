@@ -30,7 +30,7 @@ class ThemeAssetResource extends Resource
             Forms\Components\Select::make('category')->label('Kategori')
                 ->options(ThemeAsset::CATEGORIES)->default('ornament')->required(),
             Forms\Components\FileUpload::make('path')->label('File gambar')
-                ->image()->disk('public')->directory('assets-pustaka')
+                ->image()->disk('public')->directory('undangan/assets-pustaka')
                 ->acceptedFileTypes(['image/png', 'image/svg+xml', 'image/webp'])
                 ->required()
                 ->helperText('PNG transparan / SVG dianjurkan supaya menyatu dengan tema.'),

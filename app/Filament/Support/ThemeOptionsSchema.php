@@ -3,6 +3,7 @@
 namespace App\Filament\Support;
 
 use Filament\Forms;
+use Filament\Notifications\Notification;
 
 /**
  * Definisi field yang dipakai BERSAMA oleh ThemeResource (default_options.*)
@@ -17,6 +18,77 @@ use Filament\Forms;
  */
 class ThemeOptionsSchema
 {
+    /** Elemen teks hero yang bisa diatur ukuran+warna sendiri (berlaku di SEMUA gaya hero, bukan cuma Custom). */
+    public const HERO_TEXT_ELEMENTS = [
+        'eyebrow'         => 'Label "Undangan Pernikahan"',
+        'names'           => 'Nama pasangan',
+        'date'            => 'Tanggal acara',
+        'countdown_label' => 'Label "Menuju hari bahagia" (countdown)',
+        'dresscode'       => 'Dress code',
+        'guest'           => 'Kepada (nama tamu)',
+        'button'          => 'Tombol "Buka Undangan"',
+    ];
+
+    /** Datalist font dipakai bersama tiap field font per-elemen (v5). */
+    public const ELEMENT_FONTS = [
+        'Cormorant Garamond', 'Playfair Display', 'Cinzel', 'Lora', 'EB Garamond', 'Marcellus',
+        'Great Vibes', 'Dancing Script', 'Parisienne', 'Allura', 'Sacramento', 'Alex Brush',
+        'Jost', 'Poppins', 'Lato', 'Open Sans', 'Nunito', 'Inter', 'Mulish',
+    ];
+
+    /** Satu field Tipografi (font) untuk 1 elemen -- dipakai heroElementStyleFields() & sectionElementStyleFields(). */
+    protected static function elementFontField(string $formPath, string $label): Forms\Components\TextInput
+    {
+        return Forms\Components\TextInput::make($formPath)
+            ->label("Font — $label")
+            ->placeholder('Bawaan')
+            ->datalist(self::ELEMENT_FONTS);
+    }
+
+    /**
+     * "Tipografi, Ukuran & Warna tiap elemen teks hero" -- 3 field per elemen
+     * (font/ukuran/warna, v5 -- font digabung ke sini, MENGGANTIKAN field
+     * "Font nama pasangan di hero" yang terpisah/tidak termuat font Google-nya).
+     * Dipakai ThemeResource & InvitationLookResource.
+     */
+    public static function heroElementStyleFields(string $prefix = 'default_options'): array
+    {
+        $fields = [];
+        foreach (self::HERO_TEXT_ELEMENTS as $key => $label) {
+            $fields[] = Forms\Components\Grid::make(['default' => 1, 'sm' => 3])->schema([
+                self::elementFontField("$prefix.hero.elements.$key.font", $label),
+                self::fontSizeField("$prefix.hero.elements.$key.size", "Ukuran — $label (px)", 'Bawaan gaya'),
+                Forms\Components\ColorPicker::make("$prefix.hero.elements.$key.color")
+                    ->label("Warna — $label"),
+            ]);
+        }
+
+        return $fields;
+    }
+
+    /**
+     * TIPOGRAFI, UKURAN & WARNA TIAP ELEMEN TEKS SECTION (v5) — generik untuk
+     * section SELAIN hero, 3 field per elemen (font/ukuran/warna). $elements =
+     * ['elKey' => 'Label tampil', ...], key 'title' KHUSUS menimpa judul
+     * section (SectionWrapper), key lain dikonsumsi masing-masing *Style*.vue
+     * lewat var(--el-{elKey}-font/color/size, ...) -- lihat useThemeOptions.js
+     * sectionFontVars(). Dipakai ThemeResource & InvitationLookResource.
+     */
+    public static function sectionElementStyleFields(string $prefix, string $key, array $elements): array
+    {
+        $fields = [];
+        foreach ($elements as $elKey => $label) {
+            $fields[] = Forms\Components\Grid::make(['default' => 1, 'sm' => 3])->schema([
+                self::elementFontField("$prefix.sections.$key.elements.$elKey.font", $label),
+                self::fontSizeField("$prefix.sections.$key.elements.$elKey.size", "Ukuran — $label (px)", 'Bawaan tema'),
+                Forms\Components\ColorPicker::make("$prefix.sections.$key.elements.$elKey.color")
+                    ->label("Warna — $label"),
+            ]);
+        }
+
+        return $fields;
+    }
+
     /** Satu sumber pilihan gaya kartu — dipakai ThemeResource & InvitationResource. */
     public const CARD_STYLES = [
         'default'  => 'Bawaan tema',
@@ -45,23 +117,57 @@ class ThemeOptionsSchema
      *      custom di luar yang sudah ada.
      */
     public const HERO_STYLES = [
-        'classic' => '1. Classic — nama & tanggal bertumpuk (default)',
-        'framed'  => '2. Framed — foto bulat berbingkai di atas nama',
-        'split'   => '3. Split — teks & foto berbingkai dua kolom',
-        'minimal' => '4. Minimal — nama besar + garis tipis, sangat bersih',
-        'custom'  => '5. Custom — atur urutan & rata tiap elemen sendiri',
+        'classic'  => '1. Classic — nama & tanggal bertumpuk (default)',
+        'framed'   => '2. Framed — foto bulat berbingkai di atas nama',
+        'split'    => '3. Split — teks & foto berbingkai dua kolom',
+        'minimal'  => '4. Minimal — nama besar + garis tipis, sangat bersih',
+        'arch'     => '5. Arch — foto besar berbingkai lengkung di atas nama',
+        'monogram' => '6. Monogram — inisial besar di tengah, sangat minimalis',
+        'polaroid' => '7. Polaroid — foto gaya polaroid miring, playful',
+        'custom'   => '8. Custom — atur urutan & rata tiap elemen sendiri',
     ];
 
-    public const HERO_POSITIONS = [
-        'split'  => '1. Split — eyebrow di atas, konten di bawah (rekomendasi, paling seimbang untuk foto potret)',
-        'center' => '2. Center — semua di tengah layar (formal & simetris)',
-        'bottom' => '3. Bottom — konten menumpuk di bawah (foto tetap dominan)',
-        'left'   => '4. Left — rata kiri bawah (editorial/majalah, cocok foto lanskap)',
-    ];
 
     public const HERO_EFFECTS = [
         'fade'     => 'Fade — pudar halus (rekomendasi)',
         'kenburns' => 'Ken Burns — fade + zoom perlahan (ease)',
+    ];
+
+    /** Efek CSS filter untuk Background Video hero — diterapkan lewat elemen <video> di FE. */
+    public const VIDEO_EFFECTS = [
+        'none'       => 'Tanpa efek',
+        'sepia'      => 'Sepia',
+        'bw'         => 'Hitam-putih (B&W)',
+        'vintage'    => 'Vintage (sepia + kontras rendah)',
+        'blur'       => 'Blur lembut',
+        'brightness' => 'Lebih terang',
+        'contrast'   => 'Kontras tinggi',
+        'saturate'   => 'Saturasi tinggi (warna lebih hidup)',
+        'hue-rotate' => 'Hue-rotate (pergeseran warna)',
+    ];
+
+    public const VIDEO_STYLES = [
+        'classic'   => '1. Classic — 16:9, eyebrow & caption di atas (default)',
+        'cinematic' => '2. Cinematic — lebar 21:9 gelap ala layar bioskop',
+        'framed'    => '3. Framed — bingkai ornamen tebal, caption di bawah',
+    ];
+
+    public const RSVP_STYLES = [
+        'card'    => '1. Card — panel bertepi, field bertumpuk (default)',
+        'minimal' => '2. Minimal — tanpa kotak, field underline tipis',
+        'chips'   => '3. Chips — kehadiran dipilih lewat 3 tombol chip',
+    ];
+
+    public const GUESTBOOK_STYLES = [
+        'list'   => '1. List — form di atas, daftar ucapan bertumpuk (default)',
+        'wall'   => '2. Wall — daftar ucapan jadi kartu 2 kolom',
+        'quotes' => '3. Quotes — tiap ucapan tampil ala kutipan bertanda petik',
+    ];
+
+    public const GIFT_STYLES = [
+        'panel'  => '1. Panel — kartu bertepi putus-putus (default)',
+        'stack'  => '2. Stack — daftar padat, ikon jenis kado di kiri',
+        'ticket' => '3. Ticket — kartu ala tiket sobek',
     ];
 
     public const HERO_CARD_MODES = [
@@ -77,10 +183,20 @@ class ThemeOptionsSchema
     ];
 
     public const COUPLE_STYLES = [
-        'classic' => '1. Classic — teks bertumpuk klasik (tanpa foto pun rapi)',
-        'cards'   => '2. Cards — dua kartu foto berdampingan, nama di bawah foto',
-        'circle'  => '3. Circle — foto lingkaran besar, "&" kaligrafi di tengah',
-        'arch'    => '4. Arch — foto bingkai lengkung ala gerbang, berdampingan',
+        'classic'  => '1. Classic — teks bertumpuk klasik (tanpa foto pun rapi)',
+        'cards'    => '2. Cards — dua kartu foto berdampingan, nama di bawah foto',
+        'circle'   => '3. Circle — foto lingkaran besar, "&" kaligrafi di tengah',
+        'arch'     => '4. Arch — foto bingkai lengkung ala gerbang, berdampingan',
+        'portrait' => '5. Portrait — foto potret besar bertumpuk ke bawah',
+        'ribbon'   => '6. Ribbon — dua foto disatukan badge "&" di tengah',
+        'polaroid' => '7. Polaroid — dua foto gaya polaroid miring, playful',
+    ];
+
+    public const CO_HOST_STYLES = [
+        'classic' => '1. Classic — tamu spesial di atas, 2 kolom pria/wanita (default)',
+        'grid'    => '2. Grid — tiap nama jadi chip, cocok daftar panjang',
+        'elegant' => '3. Elegant — flourish tipis, tipografi vintage',
+        'compact' => '4. Compact — satu daftar padat dengan label pihak inline',
     ];
 
     public const EVENTS_STYLES = [
@@ -88,6 +204,9 @@ class ThemeOptionsSchema
         'elegant'  => '2. Elegant — flourish & tipografi vintage',
         'timeline' => '3. Timeline — garis putus-putus + penanda',
         'minimal'  => '4. Minimal — tanpa kotak, garis tipis',
+        'badge'    => '5. Badge — nomor urut bulat + detail di samping',
+        'ticket'   => '6. Ticket — kartu ala tiket sobek, playful',
+        'compact'  => '7. Compact — daftar padat, cocok banyak acara',
     ];
 
     public const COUNTDOWN_STYLES = [
@@ -110,6 +229,9 @@ class ThemeOptionsSchema
         'timeline'  => '2. Timeline — garis putus-putus + penanda hati',
         'alternate' => '3. Alternate — zigzag kiri-kanan',
         'polaroid'  => '4. Polaroid — kartu foto miring ala scrapbook',
+        'letter'    => '5. Letter — ala surat/postcard, foto bulat kecil',
+        'grid'      => '6. Grid — mosaic foto 2 kolom',
+        'minimal'   => '7. Minimal — teks di tengah, foto bulat kecil',
     ];
 
     public const GALLERY_STYLES = [
@@ -118,6 +240,9 @@ class ThemeOptionsSchema
         'masonry'  => '3. Masonry — susun bata mengikuti tinggi foto, paginasi tiap 3 baris',
         'polaroid' => '4. Polaroid — kartu foto miring selang-seling, paginasi tiap 3 baris',
         'floating' => '5. Floating — foto besar mengambang + strip thumbnail & tombol kembali ke atas',
+        'circles'  => '6. Circles — thumbnail bulat 3 kolom, paginasi tiap 3 baris',
+        'strip'    => '7. Strip — satu baris scroll horizontal (native swipe di HP)',
+        'framed'   => '8. Framed — 1 kolom foto besar berbingkai, paginasi tiap 3 baris',
     ];
 
     public const ANIMATION_PRESETS = [
@@ -174,23 +299,36 @@ class ThemeOptionsSchema
         ];
     }
 
+    /**
+     * Field ukuran font BEBAS (tanpa batas minValue/maxValue) — admin boleh isi
+     * berapa saja. Di atas $warnAt px, kirim Notification peringatan (bukan blokir)
+     * supaya admin sadar risikonya tapi tetap bisa lanjut kalau memang disengaja.
+     */
+    public static function fontSizeField(string $name, string $label, string $placeholder, int $warnAt = 60): Forms\Components\TextInput
+    {
+        return Forms\Components\TextInput::make($name)
+            ->label($label)->numeric()->live(onBlur: true)->placeholder($placeholder)
+            ->afterStateUpdated(function ($state) use ($label, $warnAt) {
+                if (filled($state) && (float) $state >= $warnAt) {
+                    Notification::make()
+                        ->title("Ukuran {$label} cukup besar ({$state}px)")
+                        ->body('Pastikan sudah dicek tampilannya di layar HP supaya tidak terpotong/menumpuk.')
+                        ->warning()->send();
+                }
+            });
+    }
+
     public static function typographyFields(string $prefix): array
     {
         return [
             Forms\Components\TextInput::make("$prefix.fonts.heading")
                 ->label('Font Judul Section')->placeholder('Bawaan tema')
-                ->helperText('Nama Google Fonts bebas diketik (mis. "Cormorant Garamond") -- dimuat otomatis.')
+                ->helperText('Nama Google Fonts bebas diketik (mis. "Cormorant Garamond") -- dimuat otomatis. Ukuran/warna judul & isi kini diatur per-section lewat "Ukuran & Warna tiap elemen teks section" di tiap tab, bukan di sini lagi.')
                 ->datalist(['Cormorant Garamond', 'Playfair Display', 'Cinzel', 'Lora', 'EB Garamond', 'Marcellus']),
-            Forms\Components\TextInput::make("$prefix.type.title_size")
-                ->label('Ukuran Font Judul (px)')->numeric()->minValue(14)->maxValue(96)->placeholder('bawaan tema'),
-            Forms\Components\ColorPicker::make("$prefix.type.title_color")->label('Warna Judul Section'),
             Forms\Components\TextInput::make("$prefix.fonts.body")
                 ->label('Font Teks Isi')->placeholder('Bawaan tema')
                 ->helperText('Dipakai untuk paragraf & label biasa (bukan judul).')
                 ->datalist(['Jost', 'Poppins', 'Lato', 'Open Sans', 'Nunito', 'Inter', 'Mulish']),
-            Forms\Components\TextInput::make("$prefix.type.body_size")
-                ->label('Ukuran Font Isi (px)')->numeric()->minValue(10)->maxValue(28)->placeholder('bawaan tema'),
-            Forms\Components\ColorPicker::make("$prefix.type.body_color")->label('Warna Teks Isi'),
             Forms\Components\TextInput::make("$prefix.fonts.script")
                 ->label('Font Kaligrafi (Nama Pasangan)')->placeholder('Bawaan tema')
                 ->helperText('Khusus font gaya tulisan tangan untuk nama pasangan di Hero.')
@@ -229,7 +367,7 @@ class ThemeOptionsSchema
                         ->label('Bawah kiri')->numeric()->minValue(0)->maxValue(120)->placeholder('bawaan'),
                     Forms\Components\TextInput::make("$prefix.card.radius_br")
                         ->label('Bawah kanan')->numeric()->minValue(0)->maxValue(120)->placeholder('bawaan'),
-                ])->columns(4)->columnSpanFull(),
+                ])->columns(['default' => 2, 'sm' => 2, 'lg' => 4])->columnSpanFull(),
         ];
     }
 
@@ -259,33 +397,65 @@ class ThemeOptionsSchema
     ];
 
     /**
-     * Checklist "Section Aktif": satu Toggle per section, label sejajar toggle
-     * (bawaan Filament Toggle). Dipakai Theme (default_options.sections.*.visible)
-     * SEBAGAI DEFAULT, dan Invitation (theme_options.sections.*.visible) SEBAGAI
-     * OVERRIDE di atasnya.
+     * Field tri-state ("Ikuti tema dasar" / "Aktif" / "Nonaktif") pengganti
+     * Toggle biner untuk SEMUA pengaturan yang punya makna "kosong = ikut
+     * parent". Toggle biner TIDAK BISA merepresentasikan "belum disentuh" --
+     * begitu form disave sekali, Filament Toggle selalu menulis true/false
+     * konkret, jadi update di parent theme setelahnya tidak pernah "menembus"
+     * lagi ke child yang sudah pernah disave (bug yang sempat dilaporkan:
+     * section tetap mati walau toggle induk sudah dinyalakan).
+     *
+     * Disimpan sebagai null (kosong/ikut parent), true, atau false -- 100%
+     * kompatibel dengan merge default_options via array_replace_recursive di
+     * Theme::ancestryChain() (null dianggap "tidak ada", diprune sebelum
+     * merge, lihat PublicInvitationController::prune()).
+     *
+     * @param  string  $formPath  path lengkap field di form, mis. "default_options.sections.countdown.visible"
+     * @param  string  $key  key yang dikirim ke $defaultFor (biasanya sama dengan bagian akhir $formPath tanpa prefix)
+     * @param  (callable(Forms\Get $get, string $key, ?\Illuminate\Database\Eloquent\Model $record): bool)|null  $defaultFor
+     *         Kalau diisi, helper text menampilkan nilai bawaan tema dasar SAAT INI (live, bukan snapshot).
+     */
+    public static function tristateToggle(string $formPath, string $key, string $label, ?callable $defaultFor = null): Forms\Components\Select
+    {
+        $select = Forms\Components\Select::make($formPath)
+            ->label($label)
+            ->options(['1' => 'Aktif', '0' => 'Nonaktif'])
+            ->placeholder('— Ikuti tema dasar —')
+            ->native(false)
+            ->afterStateHydrated(function (Forms\Components\Select $component, $state) {
+                // Data lama (sebelum migrasi ke tri-state) masih boolean asli di JSON.
+                if (is_bool($state)) {
+                    $component->state($state ? '1' : '0');
+                }
+            })
+            ->dehydrateStateUsing(fn ($state) => ($state === null || $state === '') ? null : (bool) (int) $state);
+
+        if ($defaultFor) {
+            $select->helperText(fn (Forms\Get $get, ?\Illuminate\Database\Eloquent\Model $record) => 'Bawaan tema dasar saat ini: ' . ($defaultFor($get, $key, $record) ? 'Aktif' : 'Nonaktif'));
+        }
+
+        return $select;
+    }
+
+    /**
+     * Checklist "Section Aktif": satu field tri-state per section. Dipakai
+     * Theme (default_options.sections.*.visible) SEBAGAI DEFAULT, dan
+     * Invitation (theme_options.sections.*.visible) SEBAGAI OVERRIDE di atasnya.
      *
      * @param  (callable(Forms\Get $get, string $key, ?\Illuminate\Database\Eloquent\Model $record): bool)|null  $defaultFor
-     *         Kalau diisi, nilai awal toggle di-hydrate dari sini saat state tersimpan masih null
-     *         (mis. undangan belum pernah override -> ikut default tema). $record di-inject otomatis
-     *         oleh Filament -- diabaikan closure lama yang cuma deklarasi 2 argumen.
+     *         Kalau diisi, field ini tri-state (ikut parent kalau kosong). Kalau TIDAK diisi (dipakai
+     *         di ThemeResource tanpa parent), field jadi Toggle biner default AKTIF -- tidak ada
+     *         "parent" untuk diikuti di level tema paling dasar.
      */
     public static function sectionVisibilityFields(string $prefix, ?callable $defaultFor = null): array
     {
         return collect(self::SECTION_VISIBILITY_LABELS)->map(
             function (string $label, string $key) use ($prefix, $defaultFor) {
-                $toggle = Forms\Components\Toggle::make("$prefix.sections.$key.visible")->label($label);
-
                 if ($defaultFor) {
-                    $toggle->afterStateHydrated(function (Forms\Components\Toggle $component, $state, Forms\Get $get, ?\Illuminate\Database\Eloquent\Model $record) use ($key, $defaultFor) {
-                        if ($state === null) {
-                            $component->state($defaultFor($get, $key, $record));
-                        }
-                    });
-                } else {
-                    $toggle->default(true);
+                    return self::tristateToggle("$prefix.sections.$key.visible", $key, $label, $defaultFor);
                 }
 
-                return $toggle;
+                return Forms\Components\Toggle::make("$prefix.sections.$key.visible")->label($label)->default(true);
             }
         )->values()->all();
     }

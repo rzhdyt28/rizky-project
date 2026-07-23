@@ -91,8 +91,26 @@ class InvitationResource extends Resource
                 ->description('Bukan sekadar iframe polos: ada eyebrow, kalimat pengantar, dan credit pasangan di bawah video.')
                 ->collapsed()
                 ->schema([
+                    Forms\Components\Radio::make('video_source')
+                        ->label('Sumber video')
+                        ->options(['link' => 'Link YouTube', 'upload' => 'Upload file video'])
+                        ->afterStateHydrated(function (Forms\Components\Radio $component, Forms\Get $get) {
+                            $url = $get('video_url');
+                            $component->state($url && ! str_starts_with($url, 'http') ? 'upload' : 'link');
+                        })
+                        ->inline()->inlineLabel(false)->live()->dehydrated(false)
+                        ->columnSpanFull(),
                     Forms\Components\TextInput::make('video_url')->url()->label('URL video (YouTube)')
-                        ->helperText('Contoh: https://www.youtube.com/watch?v=xxxx — otomatis jadi embed.'),
+                        ->helperText('Contoh: https://www.youtube.com/watch?v=xxxx — otomatis jadi embed.')
+                        ->visible(fn (Forms\Get $get) => ($get('video_source') ?? 'link') === 'link')
+                        ->dehydrated(fn (Forms\Get $get) => ($get('video_source') ?? 'link') === 'link'),
+                    Forms\Components\FileUpload::make('video_url')
+                        ->label('Upload file video (.mp4)')
+                        ->disk('public')->directory('undangan/videos')
+                        ->acceptedFileTypes(['video/mp4'])->maxSize(51200)
+                        ->helperText('Upload file .mp4 dari perangkat Anda (maks. 50MB) -- dipakai kalau tidak punya link YouTube.')
+                        ->visible(fn (Forms\Get $get) => ($get('video_source') ?? 'link') === 'upload')
+                        ->dehydrated(fn (Forms\Get $get) => ($get('video_source') ?? 'link') === 'upload'),
                     Forms\Components\TextInput::make('theme_options.video.eyebrow')
                         ->label('Eyebrow (label kecil di atas judul)')
                         ->placeholder('Wedding Film'),
@@ -140,7 +158,7 @@ class InvitationResource extends Resource
                 ->schema([
                     Forms\Components\FileUpload::make('music_url')
                         ->label('Musik latar (mp3)')
-                        ->disk('public')->directory('music')
+                        ->disk('public')->directory('undangan/music')
                         ->acceptedFileTypes(['audio/mpeg', 'audio/mp3'])
                         ->maxSize(15360)
                         ->helperText('Upload file mp3 milik sendiri.'),

@@ -41,6 +41,12 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        // Guard terpisah untuk project Skripsi (independen dari User utama).
+        'skripsi' => [
+            'driver' => 'session',
+            'provider' => 'skripsi_users',
+        ],
     ],
 
     /*
@@ -65,6 +71,11 @@ return [
             'driver' => 'eloquent',
             'model' => App\Core\Models\User::class
             // 'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+
+        'skripsi_users' => [
+            'driver' => 'eloquent',
+            'model' => App\Modules\Skripsi\Core\Models\User::class,
         ],
 
         // 'users' => [

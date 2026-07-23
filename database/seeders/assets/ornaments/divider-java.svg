@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 40">
+  <!-- Divider Jawa/batik -- garis dengan repetisi motif kawung kecil di
+       tengah, palet emas-coklat. -->
+  <g stroke="#8A5A22" stroke-width="1.2" opacity="0.8">
+    <line x1="0" y1="20" x2="105" y2="20" />
+    <line x1="195" y1="20" x2="300" y2="20" />
+  </g>
+  <g fill="#B8860B" opacity="0.85">
+    <ellipse cx="132" cy="20" rx="6" ry="10" />
+    <ellipse cx="150" cy="20" rx="6" ry="10" />
+    <ellipse cx="168" cy="20" rx="6" ry="10" />
+  </g>
+  <circle cx="132" cy="20" r="2.4" fill="#F4E3B2" />
+  <circle cx="150" cy="20" r="2.4" fill="#F4E3B2" />
+  <circle cx="168" cy="20" r="2.4" fill="#F4E3B2" />
+</svg>

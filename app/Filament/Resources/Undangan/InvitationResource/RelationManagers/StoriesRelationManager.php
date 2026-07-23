@@ -21,7 +21,7 @@ class StoriesRelationManager extends RelationManager
             Forms\Components\Textarea::make('story')->rows(4)->required(),
             Forms\Components\FileUpload::make('photo')
                 ->label('Foto kisah (opsional)')
-                ->image()->disk('public')->directory('stories')
+                ->image()->disk('public')->directory('undangan/stories')
                 ->helperText('Tampil di undangan hanya bila toggle "Tampilkan foto kisah" di Section Kisah Kami aktif. Saran rasio 4:3, ≤300KB.'),
             Forms\Components\TextInput::make('sort_order')->numeric()->default(0),
         ]);

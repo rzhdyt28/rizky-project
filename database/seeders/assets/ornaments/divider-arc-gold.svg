@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 40">
+  <!-- Divider klasik -- garis lengkung ganda dengan flourish tengah, emas. -->
+  <g fill="none" stroke="#B08D4A" stroke-width="1.3" opacity="0.8">
+    <path d="M0 20 H115" />
+    <path d="M185 20 H300" />
+    <path d="M130 20 Q140 6 150 20 Q160 34 170 20" />
+  </g>
+  <circle cx="150" cy="20" r="3.5" fill="#B08D4A" opacity="0.85" />
+  <circle cx="120" cy="20" r="1.6" fill="#B08D4A" opacity="0.6" />
+  <circle cx="180" cy="20" r="1.6" fill="#B08D4A" opacity="0.6" />
+</svg>

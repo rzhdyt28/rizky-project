@@ -144,16 +144,24 @@ class InvitationController extends Controller
         $this->authorize('update', $invitation);
 
         $data = $request->validate([
-            'file'      => ['required', 'file', 'max:15360'],
-            'directory' => ['required', Rule::in(['covers', 'couple', 'section-bg', 'ornaments', 'music'])],
+            'file'      => ['required', 'file'],
+            'directory' => ['required', Rule::in(['covers', 'couple', 'section-bg', 'ornaments', 'music', 'videos'])],
         ]);
 
         $isMusic = $data['directory'] === 'music';
+        $isVideo = $data['directory'] === 'videos';
         $request->validate([
-            'file' => $isMusic ? ['mimes:mp3,mpeg'] : ['image'],
+            'file' => $isMusic
+                ? ['mimes:mp3,mpeg', 'max:15360']
+                : ($isVideo ? ['mimes:mp4', 'max:51200'] : ['image', 'max:15360']),
         ]);
 
-        $path = $request->file('file')->store($data['directory'], 'public');
+        // Semua upload undangan hidup di bawah SATU namespace 'undangan/' di
+        // storage/app/public/ (terpisah dari modul lain, mis. 'portfolio/')
+        // -- pemanggil (frontend) cukup kirim nama pendek (covers, couple,
+        // dst), prefix ditambahkan di sini supaya frontend tidak perlu tahu
+        // detail struktur folder internal.
+        $path = $request->file('file')->store('undangan/' . $data['directory'], 'public');
 
         return response()->json(['path' => $path]);
     }

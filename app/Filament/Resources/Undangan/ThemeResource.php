@@ -60,9 +60,9 @@ class ThemeResource extends Resource
                     )
                     ->placeholder('— tanpa parent —')
                     ->helperText('Tema ini MEWARISI seluruh default parent; field yang diisi di sini menimpanya. component_key boleh dibiarkan berbeda dari parent — bila folder Vue-nya tidak ada, frontend otomatis memakai layout parent.'),
-                Forms\Components\FileUpload::make('preview_image')->image()->disk('public')->directory('themes'),
+                Forms\Components\FileUpload::make('preview_image')->image()->disk('public')->directory('undangan/themes'),
                 Forms\Components\Toggle::make('is_active')->default(true),
-            ])->columns(2),
+            ])->columns(['default' => 1, 'sm' => 2]),
 
             Forms\Components\Tabs::make('Opsi Desain Default')->tabs([
 
@@ -81,7 +81,106 @@ class ThemeResource extends Resource
 
                             return new \Illuminate\Support\HtmlString($base . " <strong style=\"color:#b45309\">Perhatian:</strong> tema ini dipakai {$childCount} undangan yang SUDAH punya kustomisasi tampilan sendiri — warna yang diubah di sini TIDAK akan terlihat di undangan itu (kustomisasi undangan selalu menang). Untuk mengubah tampilan SATU undangan tertentu, buka undangannya lalu klik tombol \"Edit Tampilan\".");
                         }),
-                ], ThemeOptionsSchema::colorFields('default_options'), ThemeOptionsSchema::typographyFields('default_options')))->columns(3),
+                ], ThemeOptionsSchema::colorFields('default_options'), ThemeOptionsSchema::typographyFields('default_options')))->columns(['default' => 1, 'sm' => 2, 'lg' => 3]),
+
+                Forms\Components\Tabs\Tab::make('Hero')
+                    ->icon('heroicon-o-photo')
+                    ->schema([
+                        Forms\Components\Select::make('default_options.hero.style')
+                            ->label('Model tampilan hero (default)')
+                            ->live()
+                            ->options(ThemeOptionsSchema::HERO_STYLES)
+                            ->placeholder('Classic (default)')
+                            ->helperText('Model Framed/Split/Custom/Arch/Polaroid butuh "Foto Berbingkai" di bawah -- kalau kosong, tidak akan tampil foto. Tiap undangan bisa menimpa gaya ini sendiri lewat "Edit Tampilan".')
+                            ->columnSpanFull(),
+                        Forms\Components\Fieldset::make('Foto Berbingkai Hero (default)')
+                            ->columnSpanFull()
+                            ->schema([
+                                Forms\Components\FileUpload::make('default_options.hero.framed_photo')
+                                    ->label('Foto berbingkai')
+                                    ->image()->disk('public')->directory('undangan/covers')
+                                    ->helperText('Khusus gaya Framed/Split/Custom/Arch/Polaroid -- TERPISAH dari background halaman di bawah. Biasanya dikosongkan di tema dasar (foto asli pasangan diisi per-undangan), kecuali untuk contoh/preview tema.'),
+                            ]),
+
+                        Forms\Components\Fieldset::make('Dresscode (default)')
+                            ->columns(['default' => 1, 'sm' => 2])
+                            ->schema([
+                                Forms\Components\Toggle::make('default_options.hero.dresscode_enabled')
+                                    ->label('Tampilkan dresscode')->live(),
+                                Forms\Components\TextInput::make('default_options.hero.dresscode')
+                                    ->label('Teks dresscode')
+                                    ->placeholder('mis. Batik / Nuansa Earth Tone')
+                                    ->visible(fn (Forms\Get $get) => (bool) $get('default_options.hero.dresscode_enabled')),
+                            ]),
+
+                        Forms\Components\Fieldset::make('Kartu Hero')
+                            ->columns(['default' => 1, 'sm' => 2])
+                            ->schema([
+                                Forms\Components\Select::make('default_options.layout.hero_card')
+                                    ->label('Kartu hero')
+                                    ->options(ThemeOptionsSchema::HERO_CARD_MODES)
+                                    ->placeholder('Ikut pengaturan konten'),
+                                Forms\Components\Select::make('default_options.hero.card_style')
+                                    ->label('Gaya kartu hero')
+                                    ->options(ThemeOptionsSchema::CARD_STYLES)
+                                    ->placeholder('Ikut gaya global'),
+                            ]),
+
+                        Forms\Components\Fieldset::make('Tipografi, Ukuran & Warna tiap elemen teks hero (default)')
+                            ->columnSpanFull()
+                            ->columns(['default' => 1, 'sm' => 2])
+                            ->schema(ThemeOptionsSchema::heroElementStyleFields()),
+                    ])->columns(['default' => 1, 'sm' => 2]),
+
+                Forms\Components\Tabs\Tab::make('Background Halaman')
+                    ->icon('heroicon-o-photo')
+                    ->schema([
+                        Forms\Components\Placeholder::make('info_hero_bg')
+                            ->label('')
+                            ->content('Latar TETAP di belakang seluruh halaman (BUKAN foto berbingkai hero -- itu ada di tab Hero). Biasanya dikosongkan di tema dasar; diisi per-undangan. Pilih SATU sumber -- ganti sumber otomatis mengosongkan yang lain.')
+                            ->columnSpanFull(),
+                        Forms\Components\Radio::make('hero_bg_source')
+                            ->label('Sumber background')
+                            ->options(['slideshow' => 'Foto / Slideshow', 'video' => 'Video'])
+                            ->afterStateHydrated(function (Forms\Components\Radio $component, Forms\Get $get) {
+                                $component->state(filled($get('default_options.hero.video_url')) ? 'video' : 'slideshow');
+                            })
+                            ->inline()->live()->dehydrated(false)
+                            ->afterStateUpdated(function (?string $state, Forms\Set $set) {
+                                if ($state === 'video') {
+                                    $set('default_options.hero.slideshow', []);
+                                } else {
+                                    $set('default_options.hero.video_url', null);
+                                }
+                            })
+                            ->columnSpanFull(),
+                        Forms\Components\FileUpload::make('default_options.hero.slideshow')
+                            ->label('Slideshow background (maks. 3 foto)')
+                            ->image()->disk('public')->directory('undangan/covers')
+                            ->multiple()->maxFiles(3)->reorderable()
+                            ->visible(fn (Forms\Get $get) => ($get('hero_bg_source') ?? 'slideshow') === 'slideshow')
+                            ->columnSpanFull(),
+                        Forms\Components\Select::make('default_options.hero.effect')
+                            ->label('Efek pergantian slideshow')
+                            ->options(ThemeOptionsSchema::HERO_EFFECTS)
+                            ->placeholder('Fade (rekomendasi)')
+                            ->visible(fn (Forms\Get $get) => ($get('hero_bg_source') ?? 'slideshow') === 'slideshow'),
+                        Forms\Components\TextInput::make('default_options.hero.interval')
+                            ->label('Jeda per foto (detik)')
+                            ->numeric()->minValue(4)->maxValue(12)->placeholder('6')
+                            ->visible(fn (Forms\Get $get) => ($get('hero_bg_source') ?? 'slideshow') === 'slideshow'),
+                        Forms\Components\FileUpload::make('default_options.hero.video_url')
+                            ->label('Background Video (upload .mp4)')
+                            ->disk('public')->directory('undangan/videos')
+                            ->acceptedFileTypes(['video/mp4'])->maxSize(51200)
+                            ->visible(fn (Forms\Get $get) => $get('hero_bg_source') === 'video')
+                            ->columnSpanFull(),
+                        Forms\Components\Select::make('default_options.hero.video_effect')
+                            ->label('Efek video')
+                            ->options(ThemeOptionsSchema::VIDEO_EFFECTS)
+                            ->placeholder('Tanpa efek (default)')
+                            ->visible(fn (Forms\Get $get) => $get('hero_bg_source') === 'video'),
+                    ])->columns(['default' => 1, 'sm' => 2]),
 
                 Forms\Components\Tabs\Tab::make('Ornamen & Latar')->schema([
                     Forms\Components\Placeholder::make('info_cover')
@@ -111,7 +210,7 @@ class ThemeResource extends Resource
                     Forms\Components\Toggle::make('default_options.layout.card')
                         ->label('Gunakan kartu mengambang')->default(true)
                         ->helperText('Nonaktif: tiap section tampil layar penuh tanpa kartu.'),
-                ])->columns(3),
+                ])->columns(['default' => 1, 'sm' => 2, 'lg' => 3]),
 
                 Forms\Components\Tabs\Tab::make('Countdown & Kartu')->schema(array_merge([
                     Forms\Components\Select::make('default_options.countdown.style')
@@ -126,24 +225,47 @@ class ThemeResource extends Resource
                         ->label('Preset animasi scroll')
                         ->options(ThemeOptionsSchema::ANIMATION_PRESETS)
                         ->placeholder('Muncul dari bawah (default)'),
-                    Forms\Components\Select::make('default_options.layout.hero_card')
-                        ->label('Kartu untuk HERO')
-                        ->options(ThemeOptionsSchema::HERO_CARD_MODES)
-                        ->placeholder('Ikut pengaturan konten'),
                     Forms\Components\Select::make('default_options.layout.section_height')
                         ->label('Tinggi section')
                         ->options(ThemeOptionsSchema::SECTION_HEIGHTS)
                         ->placeholder('Satu layar penuh (default)'),
-                ], ThemeOptionsSchema::cardFields('default_options', ThemeOptionsSchema::CARD_STYLES)))->columns(3),
+                ], ThemeOptionsSchema::cardFields('default_options', ThemeOptionsSchema::CARD_STYLES)))->columns(['default' => 1, 'sm' => 2, 'lg' => 3]),
+
+                Forms\Components\Tabs\Tab::make('Gaya Section')
+                    ->icon('heroicon-o-swatch')
+                    ->schema([
+                        Forms\Components\Placeholder::make('info_section_styles')
+                            ->label('')
+                            ->content('Model tampilan DEFAULT tiap section untuk tema ini. Tiap undangan bisa menimpa gayanya sendiri lewat "Edit Tampilan" -- pengaturan detail (ukuran/warna per-elemen, background, kartu per-section) sengaja HANYA ada di tingkat undangan supaya halaman Tema ini tetap sederhana.')
+                            ->columnSpanFull(),
+                        Forms\Components\Select::make('default_options.couple.style')
+                            ->label('Mempelai')->options(ThemeOptionsSchema::COUPLE_STYLES)->placeholder('Classic (default)'),
+                        Forms\Components\Select::make('default_options.events.style')
+                            ->label('Acara')->options(ThemeOptionsSchema::EVENTS_STYLES)->placeholder('Card (default)'),
+                        Forms\Components\Select::make('default_options.love_story.style')
+                            ->label('Kisah Cinta')->options(ThemeOptionsSchema::LOVE_STORY_STYLES)->placeholder('Stacked (default)'),
+                        Forms\Components\Select::make('default_options.gallery.style')
+                            ->label('Galeri Foto')->options(ThemeOptionsSchema::GALLERY_STYLES)->placeholder('Carousel (default)'),
+                        Forms\Components\Select::make('default_options.video.style')
+                            ->label('Video')->options(ThemeOptionsSchema::VIDEO_STYLES)->placeholder('Classic (default)'),
+                        Forms\Components\Select::make('default_options.rsvp.style')
+                            ->label('Konfirmasi Kehadiran')->options(ThemeOptionsSchema::RSVP_STYLES)->placeholder('Card (default)'),
+                        Forms\Components\Select::make('default_options.guestbook.style')
+                            ->label('Ucapan & Doa')->options(ThemeOptionsSchema::GUESTBOOK_STYLES)->placeholder('List (default)'),
+                        Forms\Components\Select::make('default_options.gift.style')
+                            ->label('Hadiah Digital')->options(ThemeOptionsSchema::GIFT_STYLES)->placeholder('Panel (default)'),
+                        Forms\Components\Select::make('default_options.co_host.style')
+                            ->label('Turut Mengundang')->options(ThemeOptionsSchema::CO_HOST_STYLES)->placeholder('Classic (default)'),
+                    ])->columns(['default' => 1, 'sm' => 2, 'lg' => 3]),
 
                 Forms\Components\Tabs\Tab::make('Label Teks')
-                    ->schema(ThemeOptionsSchema::labelFields('default_options'))->columns(2),
+                    ->schema(ThemeOptionsSchema::labelFields('default_options'))->columns(['default' => 1, 'sm' => 2]),
 
                 Forms\Components\Tabs\Tab::make('Section Aktif')->schema(array_merge([
                     Forms\Components\Placeholder::make('info_sections')
                         ->label('')
                         ->content('Section mana yang aktif SECARA DEFAULT untuk tema ini. Tiap undangan bisa menimpanya sendiri-sendiri lewat checklist "Section Aktif" di form Undangan.'),
-                ], ThemeOptionsSchema::sectionVisibilityFields('default_options')))->columns(3),
+                ], ThemeOptionsSchema::sectionVisibilityFields('default_options')))->columns(['default' => 1, 'sm' => 2, 'lg' => 3]),
 
             ])->columnSpanFull(),
         ]);
